@@ -4,29 +4,21 @@ package com.adobe.aem_kmp_boilerplate.data
  * Configuration for an EDS (Edge Delivery Services) site.
  * Used to construct URLs for fetching page JSON content.
  *
- * @param owner The GitHub owner/organization (e.g., "adobe")
- * @param repo The repository name (e.g., "aem-boilerplate")
- * @param branch The branch name (default: "main")
- * @param jsonServiceUrl The JSON conversion service URL (default: "https://mhast-html-to-json.adobeaem.workers.dev")
+ * @param siteUrl The base URL of the EDS site (e.g., "https://main--aem-boilerplate--adobe.aem.live")
+ * @param jsonServiceUrl The JSON conversion service URL (default: "http://localhost:8787/")
  */
 data class EdsConfig(
-    val owner: String,
-    val repo: String,
-    val branch: String = "main",
+    val siteUrl: String,
     val jsonServiceUrl: String = DEFAULT_JSON_SERVICE_URL
 ) {
-    /**
-     * Base URL for the live EDS site.
-     * Pattern: https://{branch}--{repo}--{owner}.aem.live
-     */
-    val siteUrl: String
-        get() = "https://$branch--$repo--$owner.aem.live"
-
     /**
      * Host name for the EDS site (used for link handling).
      */
     val siteHost: String
-        get() = "$branch--$repo--$owner.aem.live"
+        get() = siteUrl
+            .removePrefix("https://")
+            .removePrefix("http://")
+            .substringBefore("/")
 
     /**
      * Construct the JSON URL for a specific page path using the new query parameter approach.
@@ -77,7 +69,7 @@ data class EdsConfig(
          * Default JSON conversion service URL.
          * Can be overridden by providing a custom jsonServiceUrl in the constructor.
          */
-        const val DEFAULT_JSON_SERVICE_URL = "http://localhost:8787/"//"https://mhast-html-to-json.adobeaem.workers.dev"
+        const val DEFAULT_JSON_SERVICE_URL = "http://localhost:8787"//"https://mhast-html-to-json.adobeaem.workers.dev"
     }
 }
 
@@ -85,8 +77,6 @@ data class EdsConfig(
  * Default EDS configuration for the AEM Boilerplate site.
  */
 val DefaultEdsConfig = EdsConfig(
-    owner = "adobe",
-    repo = "aem-boilerplate",
-    branch = "main"
+    siteUrl = "https://main--aem-boilerplate--adobe.aem.live"
 )
 
