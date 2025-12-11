@@ -12,17 +12,17 @@ import com.mmk.kmpnotifier.notification.NotifierManager
 import com.mmk.kmpnotifier.permission.permissionUtil
 
 class MainActivity : ComponentActivity() {
-    
+
     // Permission utility for Android 13+ notification permission
     private val permissionUtil by permissionUtil()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         // Ask for notification permission on Android 13+
         permissionUtil.askNotificationPermission()
-        
+
         // Handle notification intent data for payload extraction
         NotifierManager.onCreateOrOnNewIntent(intent)
 

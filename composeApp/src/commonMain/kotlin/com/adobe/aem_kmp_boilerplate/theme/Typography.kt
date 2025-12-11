@@ -32,9 +32,9 @@ import androidx.compose.ui.unit.sp
 
 /**
  * Brand Font Family
- * 
+ *
  * TODO: Uncomment after adding font files to composeResources/font/
- * 
+ *
  * Example usage:
  * ```
  * @Composable
@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.sp
 // Placeholder - returns default system font
 // Replace with actual brand font implementation above
 @Composable
-fun BrandFontFamily(): FontFamily = FontFamily.Default
+fun brandFontFamily(): FontFamily = FontFamily.Default
 
 /**
  * Creates the app typography with the brand font family.
@@ -60,8 +60,8 @@ fun BrandFontFamily(): FontFamily = FontFamily.Default
  */
 @Composable
 fun appTypography(): Typography {
-    val brandFont = BrandFontFamily()
-    
+    val brandFont = brandFontFamily()
+
     return Typography(
         // Display styles - Large headlines
         displayLarge = TextStyle(

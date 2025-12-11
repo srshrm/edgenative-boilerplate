@@ -65,7 +65,7 @@ private val DarkColorScheme = darkColorScheme(
 /**
  * AEM App Theme wrapper using Material 3.
  * Automatically handles light/dark theme based on system settings.
- * 
+ *
  * Uses custom brand fonts when configured in Typography.kt.
  * See: composeResources/font/README.md for font setup instructions.
  *
@@ -78,7 +78,7 @@ fun AemAppTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-    
+
     // Use composable typography function to support custom fonts
     val typography = appTypography()
 

@@ -77,7 +77,7 @@ fun ContentNodeRenderer(
     modifier: Modifier = Modifier
 ) {
     val edsConfig = LocalEdsConfig.current
-    
+
     when {
         node.isImage -> {
             edsConfig.resolveUrl(node.src)?.let { resolvedUrl ->

@@ -64,7 +64,7 @@ private fun CardItem(
     modifier: Modifier = Modifier
 ) {
     val edsConfig = LocalEdsConfig.current
-    
+
     // Cards typically have image in first column, text in second
     val imageColumn = row.firstColumn
     val textColumn = row.secondColumn ?: row.firstColumn

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -247,11 +246,11 @@ private fun DrawerContent(
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp)
         )
-        
+
         HorizontalDivider()
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         // Navigation Items
         NavigationDrawerItem(
             label = { Text("Home") },
@@ -259,14 +258,14 @@ private fun DrawerContent(
             onClick = { onNavigate("/") },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
-        
+
         NavigationDrawerItem(
             label = { Text("About") },
             selected = false,
             onClick = { onNavigate("/about") },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
-        
+
         NavigationDrawerItem(
             label = { Text("Contact") },
             selected = false,

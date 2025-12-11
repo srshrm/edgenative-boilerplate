@@ -1,15 +1,15 @@
 package com.adobe.aem_kmp_boilerplate.notification
 
-import com.mmk.kmpnotifier.notification.NotifierManager
-import com.mmk.kmpnotifier.notification.Notifier
 import com.mmk.kmpnotifier.notification.NotificationImage
+import com.mmk.kmpnotifier.notification.Notifier
+import com.mmk.kmpnotifier.notification.NotifierManager
 import com.mmk.kmpnotifier.notification.PayloadData
 import kotlin.random.Random
 
 /**
  * Common notification service for showing local notifications across all platforms.
  * Uses KMPNotifier library under the hood.
- * 
+ *
  * Based on: https://github.com/mirzemehdi/KMPNotifier
  */
 object NotificationService {
@@ -39,8 +39,8 @@ object NotificationService {
             this.title = title
             this.body = body
             this.payloadData = payloadData
-            imageUrl?.let { 
-                this.image = NotificationImage.Url(it) 
+            imageUrl?.let {
+                this.image = NotificationImage.Url(it)
             }
         }
         return id
@@ -68,8 +68,8 @@ object NotificationService {
             this.title = title
             this.body = body
             this.payloadData = mapOf(Notifier.KEY_URL to url)
-            imageUrl?.let { 
-                this.image = NotificationImage.Url(it) 
+            imageUrl?.let {
+                this.image = NotificationImage.Url(it)
             }
         }
         return id
@@ -149,7 +149,7 @@ object NotificationService {
 
     /**
      * Subscribe to a push notification topic.
-     * 
+     *
      * @param topic The topic name to subscribe to
      */
     suspend fun subscribeToTopic(topic: String) {
@@ -158,7 +158,7 @@ object NotificationService {
 
     /**
      * Unsubscribe from a push notification topic.
-     * 
+     *
      * @param topic The topic name to unsubscribe from
      */
     suspend fun unsubscribeFromTopic(topic: String) {

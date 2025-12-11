@@ -51,7 +51,7 @@ data class EdsConfig(
      */
     fun resolveUrl(relativeUrl: String?): String? {
         if (relativeUrl == null) return null
-        
+
         return when {
             // Already absolute URL
             relativeUrl.startsWith("http://") || relativeUrl.startsWith("https://") -> relativeUrl
@@ -69,7 +69,8 @@ data class EdsConfig(
          * Default JSON conversion service URL.
          * Can be overridden by providing a custom jsonServiceUrl in the constructor.
          */
-        const val DEFAULT_JSON_SERVICE_URL = "http://localhost:8787"//"https://mhast-html-to-json.adobeaem.workers.dev"
+        const val DEFAULT_JSON_SERVICE_URL =
+            "http://localhost:8787"//"https://mhast-html-to-json.adobeaem.workers.dev"
     }
 }
 
