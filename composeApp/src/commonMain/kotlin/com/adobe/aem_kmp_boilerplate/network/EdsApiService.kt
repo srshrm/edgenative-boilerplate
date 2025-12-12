@@ -48,12 +48,13 @@ class EdsApiService(
 
     /**
      * Fetch the home page for the given EDS configuration.
+     * Uses the configured homePath from the EdsConfig.
      *
      * @param config The EDS site configuration
      * @return Result containing the parsed EdsPage or an error
      */
     suspend fun fetchHomePage(config: EdsConfig): Result<EdsPage> {
-        return fetchPage(config, "")
+        return fetchPage(config, config.homePath)
     }
 
     /**

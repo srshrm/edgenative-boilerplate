@@ -2,22 +2,15 @@ package com.adobe.aem_kmp_boilerplate.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -32,7 +25,6 @@ import com.adobe.aem_kmp_boilerplate.data.DefaultEdsConfig
 import com.adobe.aem_kmp_boilerplate.data.EdsConfig
 import com.adobe.aem_kmp_boilerplate.data.EdsPage
 import com.adobe.aem_kmp_boilerplate.data.LocalEdsConfig
-import com.adobe.aem_kmp_boilerplate.data.titleText
 import com.adobe.aem_kmp_boilerplate.network.EdsApiService
 import com.adobe.aem_kmp_boilerplate.theme.Spacing
 
@@ -43,15 +35,14 @@ import com.adobe.aem_kmp_boilerplate.theme.Spacing
  * @param path The relative page path to display
  * @param edsConfig The EDS site configuration
  * @param onNavigate Callback for link navigation
- * @param onBack Callback for back navigation
+ * @param paddingValues Padding values from parent Scaffold
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PageDetailScreen(
     path: String,
     edsConfig: EdsConfig = DefaultEdsConfig,
     onNavigate: (String) -> Unit = {},
-    onBack: () -> Unit = {}
+    paddingValues: PaddingValues = PaddingValues()
 ) {
     var pageData by remember { mutableStateOf<EdsPage?>(null) }
     var isLoading by remember { mutableStateOf(true) }
@@ -75,57 +66,31 @@ fun PageDetailScreen(
     }
 
     CompositionLocalProvider(LocalEdsConfig provides edsConfig) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = pageData?.metadata?.titleText ?: formatPathAsTitle(path),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            when {
+                isLoading -> {
+                    LoadingContent()
+                }
+
+                error != null -> {
+                    ErrorContent(
+                        message = error!!,
+                        onRetry = {
+                            isLoading = true
+                            error = null
                         }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface
                     )
-                )
-            }
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                when {
-                    isLoading -> {
-                        LoadingContent()
-                    }
+                }
 
-                    error != null -> {
-                        ErrorContent(
-                            message = error!!,
-                            onRetry = {
-                                isLoading = true
-                                error = null
-                            }
-                        )
-                    }
-
-                    pageData != null -> {
-                        PageContent(
-                            page = pageData!!,
-                            onLinkClick = onNavigate
-                        )
-                    }
+                pageData != null -> {
+                    PageContent(
+                        page = pageData!!,
+                        onLinkClick = onNavigate
+                    )
                 }
             }
         }

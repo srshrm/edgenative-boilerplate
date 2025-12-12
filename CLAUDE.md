@@ -84,6 +84,7 @@ EdsConfig → EdsApiService → JSON → EdsPage → SectionRenderer → BlockRe
 
 1. **EdsConfig** (`data/EdsConfig.kt`) - Configures the EDS site connection:
    - `siteUrl`: Base URL of the EDS site (e.g., "https://main--aem-boilerplate--adobe.aem.live")
+   - `homePath`: Relative path to use as the home page (e.g., "emea/en/products" or "" for site root)
    - `jsonServiceUrl`: JSON conversion service endpoint
 
 2. **EdsApiService** (`network/EdsApiService.kt`) - Fetches pages:
@@ -148,10 +149,18 @@ Uses **Navigation 3** (`androidx.navigation3`) with type-safe routes:
   - `Home` - Home screen (object)
   - `PageDetail(path: String)` - Any EDS page by path
 
+- **AppNavigation** (`navigation/AppNavigation.kt`):
+  - Global `ModalNavigationDrawer` accessible from all screens
+  - Wraps all screens with a `Scaffold` containing top bar and menu
+  - Handles navigation state and drawer state management
+
 - **LinkHandler** (`navigation/LinkHandler.kt`):
   - `shouldNavigateInternally()` - Check if URL is internal
   - `extractPath()` - Extract path from URL for navigation
   - `isAnchorLink()` / `isSpecialProtocol()` - Handle special URLs
+
+**Navigation Drawer:**
+The drawer is now globally accessible from any screen in the app. To customize drawer items, edit the `DrawerContent` composable in `AppNavigation.kt`.
 
 ### Platform-Specific Code (expect/actual)
 
@@ -195,10 +204,16 @@ To point this app to a different EDS site:
 
 ```kotlin
 val DefaultEdsConfig = EdsConfig(
-    siteUrl = "https://main--aem-boilerplate--adobe.aem.live",
+    siteUrl = "https://www.airlessco.com",
+    homePath = "emea/en/products",  // Optional: specify a custom home page path
     jsonServiceUrl = "https://your-json-service.workers.dev"  // Optional custom service
 )
 ```
+
+**Example configurations:**
+- Default site root as home: `EdsConfig(siteUrl = "https://example.com")`
+- Custom home page: `EdsConfig(siteUrl = "https://www.airlessco.com", homePath = "emea/en/products")`
+- This allows you to set any page as the home page, useful when migrating specific sections of a site
 
 ### 2. URL Pattern
 The app constructs URLs as:

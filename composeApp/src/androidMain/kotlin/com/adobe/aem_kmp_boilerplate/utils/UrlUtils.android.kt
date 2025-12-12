@@ -1,9 +1,8 @@
 package com.adobe.aem_kmp_boilerplate.utils
 
 import android.content.Intent
-import android.net.Uri
-import com.adobe.aem_kmp_boilerplate.AndroidApp
 import androidx.core.net.toUri
+import com.adobe.aem_kmp_boilerplate.AndroidApp
 
 actual fun openUrl(url: String) {
     val context = AndroidApp.applicationContext

@@ -5,10 +5,12 @@ package com.adobe.aem_kmp_boilerplate.data
  * Used to construct URLs for fetching page JSON content.
  *
  * @param siteUrl The base URL of the EDS site (e.g., "https://main--aem-boilerplate--adobe.aem.live")
- * @param jsonServiceUrl The JSON conversion service URL (default: "http://localhost:8787/")
+ * @param homePath The relative path to use as the home page (e.g., "emea/en/products" or "" for site root)
+ * @param jsonServiceUrl The JSON conversion service URL (default: "https://mhast-html-to-json.aemrnd.workers.dev")
  */
 data class EdsConfig(
     val siteUrl: String,
+    val homePath: String = "",
     val jsonServiceUrl: String = DEFAULT_JSON_SERVICE_URL
 ) {
     /**
@@ -69,8 +71,7 @@ data class EdsConfig(
          * Default JSON conversion service URL.
          * Can be overridden by providing a custom jsonServiceUrl in the constructor.
          */
-        const val DEFAULT_JSON_SERVICE_URL =
-            "http://localhost:8787"//"https://mhast-html-to-json.adobeaem.workers.dev"
+        const val DEFAULT_JSON_SERVICE_URL = "https://mhast-html-to-json.aemrnd.workers.dev"
     }
 }
 
