@@ -9,8 +9,8 @@ package com.adobe.aem_kmp_boilerplate.data
  * @param jsonServiceUrl The JSON conversion service URL (default: "https://mhast-html-to-json.aemrnd.workers.dev")
  */
 data class EdsConfig(
-    val siteUrl: String,
-    val homePath: String = "",
+    val siteUrl: String = DefaultEdsConfig.siteUrl,
+    val homePath: String = DefaultEdsConfig.homePath,
     val jsonServiceUrl: String = DEFAULT_JSON_SERVICE_URL
 ) {
     /**
@@ -79,6 +79,7 @@ data class EdsConfig(
  * Default EDS configuration for the AEM Boilerplate site.
  */
 val DefaultEdsConfig = EdsConfig(
-    siteUrl = "https://main--aem-boilerplate--adobe.aem.live"
+    siteUrl = "https://main--aem-boilerplate--adobe.aem.live",
+    homePath = ""
 )
 
