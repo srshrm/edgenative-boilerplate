@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "891746544520",
-    "project_id": "aem-kmp-boilerplate",
-    "storage_bucket": "aem-kmp-boilerplate.firebasestorage.app"
+    "project_number": "YOUR_PROJECT_NUMBER",
+    "project_id": "YOUR_PROJECT_ID",
+    "storage_bucket": "YOUR_PROJECT_ID.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:891746544520:android:40028b42d435756808683d",
+        "mobilesdk_app_id": "1:YOUR_PROJECT_NUMBER:android:YOUR_APP_ID",
         "android_client_info": {
           "package_name": "com.adobe.aem_kmp_boilerplate"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC_c1rzEH8rUlqvsG08qGGQPE9fR2BAgvc"
+          "current_key": "YOUR_ANDROID_API_KEY"
         }
       ],
       "services": {
