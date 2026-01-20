@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adobe.aem_kmp_boilerplate.data.ContentNode
 import com.adobe.aem_kmp_boilerplate.data.ContentParser
+import com.adobe.aem_kmp_boilerplate.data.LocalEdsConfig
 
 /**
  * Renders an EDS block based on its name.
@@ -62,6 +63,17 @@ fun BlockRenderer(
         blockName == "header" || blockName == "nav" -> {
             // Header is typically handled by the screen's top app bar
             // Skip direct rendering here
+        }
+
+        // Fragment block - fetches and renders content from another URL
+        blockName == "fragment" -> {
+            val edsConfig = LocalEdsConfig.current
+            FragmentBlock(
+                rows = blockContent,
+                edsConfig = edsConfig,
+                onLinkClick = onLinkClick,
+                modifier = modifier
+            )
         }
 
         // Default fallback - render as generic block
