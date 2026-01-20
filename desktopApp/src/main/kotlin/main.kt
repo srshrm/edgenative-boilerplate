@@ -1,7 +1,6 @@
-package com.adobe.aem_kmp_boilerplate
-
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import com.adobe.aem_kmp_boilerplate.App
 import com.mmk.kmpnotifier.extensions.composeDesktopResourcesPath
 import com.mmk.kmpnotifier.notification.NotifierManager
 import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration

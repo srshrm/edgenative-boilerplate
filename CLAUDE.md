@@ -1,40 +1,47 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this
+repository.
 
 ## Project Overview
 
-AEM KMP Boilerplate is a Kotlin Multiplatform (KMP) application that renders Adobe Experience Manager (AEM) Edge Delivery Services (EDS) content natively on **Android**, **iOS**, and **Desktop (JVM)**. It uses Compose Multiplatform for shared UI and fetches EDS page content via a JSON conversion service.
+AEM KMP Boilerplate is a Kotlin Multiplatform (KMP) application that renders Adobe Experience
+Manager (AEM) Edge Delivery Services (EDS) content natively on **Android**, **iOS**, and **Desktop (
+JVM)**. It uses Compose Multiplatform for shared UI and fetches EDS page content via a JSON
+conversion service.
 
 **Package namespace**: `com.adobe.aem_kmp_boilerplate`
 
 ## Build Commands
 
 ### Android
+
 ```bash
 # Build debug APK
-./gradlew :composeApp:assembleDebug
+./gradlew :androidApp:assembleDebug
 
 # Build release APK
-./gradlew :composeApp:assembleRelease
+./gradlew :androidApp:assembleRelease
 
 # Install on connected device
-./gradlew :composeApp:installDebug
+./gradlew :androidApp:installDebug
 ```
 
 ### Desktop (JVM)
+
 ```bash
 # Run desktop application
-./gradlew :composeApp:run
+./gradlew :desktopApp:run
 
 # Build distributable packages (DMG, MSI, DEB)
-./gradlew :composeApp:packageDistributionForCurrentOS
-./gradlew :composeApp:packageDmg    # macOS
-./gradlew :composeApp:packageMsi    # Windows
-./gradlew :composeApp:packageDeb    # Linux
+./gradlew :desktopApp:packageDistributionForCurrentOS
+./gradlew :desktopApp:packageDmg    # macOS
+./gradlew :desktopApp:packageMsi    # Windows
+./gradlew :desktopApp:packageDeb    # Linux
 ```
 
 ### iOS
+
 ```bash
 # Build iOS framework
 ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64
@@ -44,11 +51,21 @@ AEM KMP Boilerplate is a Kotlin Multiplatform (KMP) application that renders Ado
 open iosApp/iosApp.xcodeproj
 ```
 
-## Project Structure
+### Full Build
+
+```bash
+# Build all modules
+./gradlew build
+
+# Clean and rebuild
+./gradlew clean build
+```
+
+## Project Structure (AGP 9.0 Module Separation)
 
 ```
 aem-kmp-boilerplate/
-├── composeApp/                      # Main Kotlin Multiplatform module
+├── composeApp/                      # Shared KMP library module
 │   ├── src/
 │   │   ├── commonMain/kotlin/       # Shared code for all platforms
 │   │   │   └── com/adobe/aem_kmp_boilerplate/
@@ -62,15 +79,31 @@ aem-kmp-boilerplate/
 │   │   │       ├── theme/           # Material 3 theming
 │   │   │       └── utils/           # Utilities (expect declarations)
 │   │   ├── androidMain/kotlin/      # Android-specific implementations
+│   │   │   └── AppContextProvider.kt # Context provider for shared module
 │   │   ├── iosMain/kotlin/          # iOS-specific implementations
 │   │   └── jvmMain/kotlin/          # Desktop-specific implementations
-│   └── build.gradle.kts             # Module configuration
+│   └── build.gradle.kts             # KMP library with android.kmp.library plugin
+├── androidApp/                      # Android application module (AGP 9.0)
+│   ├── src/main/
+│   │   ├── kotlin/.../
+│   │   │   ├── AndroidApp.kt        # Application class + notifications
+│   │   │   └── MainActivity.kt      # Main activity entry point
+│   │   ├── res/                     # Android resources (icons, strings)
+│   │   └── AndroidManifest.xml
+│   ├── google-services.json         # Firebase configuration
+│   └── build.gradle.kts             # Android application plugin
+├── desktopApp/                      # Desktop application module
+│   ├── src/main/
+│   │   ├── kotlin/main.kt           # Desktop entry point
+│   │   └── resources/common/        # Desktop resources (notification icon)
+│   └── build.gradle.kts             # Compose desktop configuration
 ├── iosApp/                          # iOS SwiftUI wrapper
 │   └── iosApp/
 │       ├── iOSApp.swift             # iOS app entry + Firebase/notifications
 │       ├── ContentView.swift        # SwiftUI → Compose bridge
 │       └── GoogleService-Info.plist # Firebase configuration
 ├── gradle/libs.versions.toml        # Version catalog (all dependencies)
+├── settings.gradle.kts              # Module includes
 └── build.gradle.kts                 # Root project configuration
 ```
 
@@ -83,18 +116,19 @@ EdsConfig → EdsApiService → JSON → EdsPage → SectionRenderer → BlockRe
 ```
 
 1. **EdsConfig** (`data/EdsConfig.kt`) - Configures the EDS site connection:
-   - `siteUrl`: Base URL of the EDS site (e.g., "https://main--aem-boilerplate--adobe.aem.live")
-   - `homePath`: Relative path to use as the home page (e.g., "emea/en/products" or "" for site root)
-   - `jsonServiceUrl`: JSON conversion service endpoint
+    - `siteUrl`: Base URL of the EDS site (e.g., "https://main--aem-boilerplate--adobe.aem.live")
+    - `homePath`: Relative path to use as the home page (e.g., "emea/en/products" or "" for site
+      root)
+    - `jsonServiceUrl`: JSON conversion service endpoint
 
 2. **EdsApiService** (`network/EdsApiService.kt`) - Fetches pages:
-   - `fetchPage(config, path)` - Fetch any page by path
-   - `fetchHomePage(config)` - Fetch the home page
+    - `fetchPage(config, path)` - Fetch any page by path
+    - `fetchHomePage(config)` - Fetch the home page
 
 3. **ContentParser** (`data/ContentParser.kt`) - Parses JSON:
-   - `parseContentNodes()` - Parse content arrays
-   - `parseBlockContent()` - Parse block 3D arrays (rows → columns → items)
-   - `extractPlainText()` - Extract text from nested content
+    - `parseContentNodes()` - Parse content arrays
+    - `parseBlockContent()` - Parse block 3D arrays (rows → columns → items)
+    - `extractPlainText()` - Extract text from nested content
 
 4. **SectionRenderer** (`blocks/DefaultContent.kt`) - Renders sections containing blocks and content
 
@@ -102,27 +136,29 @@ EdsConfig → EdsApiService → JSON → EdsPage → SectionRenderer → BlockRe
 
 ### Data Models
 
-| Model | Purpose |
-|-------|---------|
-| `EdsPage` | Root page with `metadata` and `content` |
-| `SectionContainer` | Section wrapper with optional metadata |
-| `ContentNode` | Universal element: heading, paragraph, image, link, block, list |
-| `BlockRow` | Row in block content table |
-| `BlockColumn` | Column in block row containing `ContentNode` items |
+| Model              | Purpose                                                         |
+|--------------------|-----------------------------------------------------------------|
+| `EdsPage`          | Root page with `metadata` and `content`                         |
+| `SectionContainer` | Section wrapper with optional metadata                          |
+| `ContentNode`      | Universal element: heading, paragraph, image, link, block, list |
+| `BlockRow`         | Row in block content table                                      |
+| `BlockColumn`      | Column in block row containing `ContentNode` items              |
 
 ### Block System
 
 Blocks are EDS content structures rendered as native UI. Current implementations:
 
-| Block | File | Description |
-|-------|------|-------------|
-| `HeroBlock` | `blocks/HeroBlock.kt` | Hero banners with variants (small, large, centered) |
-| `CardsBlock` | `blocks/CardsBlock.kt` | Card grid using FlowRow |
-| `ColumnsBlock` | `blocks/ColumnsBlock.kt` | Multi-column layouts |
-| `GenericBlock` | `blocks/GenericBlock.kt` | Fallback for unrecognized blocks |
+| Block          | File                     | Description                                         |
+|----------------|--------------------------|-----------------------------------------------------|
+| `HeroBlock`    | `blocks/HeroBlock.kt`    | Hero banners with variants (small, large, centered) |
+| `CardsBlock`   | `blocks/CardsBlock.kt`   | Card grid using FlowRow                             |
+| `ColumnsBlock` | `blocks/ColumnsBlock.kt` | Multi-column layouts                                |
+| `GenericBlock` | `blocks/GenericBlock.kt` | Fallback for unrecognized blocks                    |
 
 **Adding a new block:**
-1. Create `blocks/YourBlock.kt`:
+
+1. Create `composeApp/src/commonMain/kotlin/.../blocks/YourBlock.kt`:
+
 ```kotlin
 @Composable
 fun YourBlock(
@@ -134,7 +170,9 @@ fun YourBlock(
     // Render your block UI
 }
 ```
+
 2. Add case in `BlockRenderer.kt`:
+
 ```kotlin
 blockName.contains("yourblock") -> {
     YourBlock(rows = blockContent, onLinkClick = onLinkClick, modifier = modifier)
@@ -146,51 +184,58 @@ blockName.contains("yourblock") -> {
 Uses **Navigation 3** (`androidx.navigation3`) with type-safe routes:
 
 - **Routes** (`navigation/Routes.kt`):
-  - `Home` - Home screen (object)
-  - `PageDetail(path: String)` - Any EDS page by path
+    - `Home` - Home screen (object)
+    - `PageDetail(path: String)` - Any EDS page by path
 
 - **AppNavigation** (`navigation/AppNavigation.kt`):
-  - Global `ModalNavigationDrawer` accessible from all screens
-  - Wraps all screens with a `Scaffold` containing top bar and menu
-  - Handles navigation state and drawer state management
+    - Global `ModalNavigationDrawer` accessible from all screens
+    - Wraps all screens with a `Scaffold` containing top bar and menu
+    - Handles navigation state and drawer state management
 
 - **LinkHandler** (`navigation/LinkHandler.kt`):
-  - `shouldNavigateInternally()` - Check if URL is internal
-  - `extractPath()` - Extract path from URL for navigation
-  - `isAnchorLink()` / `isSpecialProtocol()` - Handle special URLs
+    - `shouldNavigateInternally()` - Check if URL is internal
+    - `extractPath()` - Extract path from URL for navigation
+    - `isAnchorLink()` / `isSpecialProtocol()` - Handle special URLs
 
 **Navigation Drawer:**
-The drawer is now globally accessible from any screen in the app. To customize drawer items, edit the `DrawerContent` composable in `AppNavigation.kt`.
+The drawer is now globally accessible from any screen in the app. To customize drawer items, edit
+the `DrawerContent` composable in `AppNavigation.kt`.
 
 ### Platform-Specific Code (expect/actual)
 
-| Expect Declaration | Purpose |
-|-------------------|---------|
+| Expect Declaration           | Purpose                                              |
+|------------------------------|------------------------------------------------------|
 | `createPlatformHttpClient()` | HTTP engine (OkHttp for Android/JVM, Darwin for iOS) |
-| `openUrl(url: String)` | Open URL in system browser |
+| `openUrl(url: String)`       | Open URL in system browser                           |
+
+**Android Context Provider:**
+Since Android app code is in a separate module (`androidApp`), shared code in `composeApp` uses
+`AppContextProvider` to access Android context. The `AndroidApp` initializes it on startup.
 
 ### Theme System
 
-| File | Purpose |
-|------|---------|
-| `theme/Theme.kt` | `AemAppTheme` - Material 3 wrapper with dark/light support |
-| `theme/Color.kt` | Adobe Red brand colors (light/dark variants) |
-| `theme/Typography.kt` | Typography with custom font support |
-| `theme/Spacing.kt` | Spacing tokens (8dp grid), icon sizes, corner radii |
+| File                  | Purpose                                                    |
+|-----------------------|------------------------------------------------------------|
+| `theme/Theme.kt`      | `AemAppTheme` - Material 3 wrapper with dark/light support |
+| `theme/Color.kt`      | Adobe Red brand colors (light/dark variants)               |
+| `theme/Typography.kt` | Typography with custom font support                        |
+| `theme/Spacing.kt`    | Spacing tokens (8dp grid), icon sizes, corner radii        |
 
-**Custom fonts**: Add `.ttf` files to `composeResources/font/` and uncomment font loading in `Typography.kt`.
+**Custom fonts**: Add `.ttf` files to `composeResources/font/` and uncomment font loading in
+`Typography.kt`.
 
 ### Push Notifications
 
 Uses **KMPNotifier** library for cross-platform notifications:
 
-| Platform | Setup |
-|----------|-------|
-| Android | `AndroidApp.kt` initializes NotifierManager, requires `google-services.json` |
-| iOS | `iOSApp.swift` initializes Firebase and NotifierManager, requires `GoogleService-Info.plist` |
-| Desktop | `main.kt` initializes with icon path |
+| Platform | Setup                                                                                         |
+|----------|-----------------------------------------------------------------------------------------------|
+| Android  | `androidApp/.../AndroidApp.kt` initializes NotifierManager, requires `google-services.json`   |
+| iOS      | `iosApp/iOSApp.swift` initializes Firebase and NotifierManager, requires `GoogleService-Info.plist` |
+| Desktop  | `desktopApp/src/main/kotlin/main.kt` initializes with icon path                               |
 
 **NotificationService** (`notification/NotificationService.kt`) provides:
+
 - `showNotification()` - Show local notification
 - `getPushToken()` - Get FCM/APNs token
 - `subscribeToTopic()` / `unsubscribeFromTopic()` - Topic subscriptions
@@ -200,7 +245,7 @@ Uses **KMPNotifier** library for cross-platform notifications:
 
 To point this app to a different EDS site:
 
-### 1. Update EdsConfig (`data/EdsConfig.kt`)
+### 1. Update EdsConfig (`composeApp/src/commonMain/.../data/EdsConfig.kt`)
 
 ```kotlin
 val DefaultEdsConfig = EdsConfig(
@@ -211,59 +256,93 @@ val DefaultEdsConfig = EdsConfig(
 ```
 
 **Example configurations:**
+
 - Default site root as home: `EdsConfig(siteUrl = "https://example.com")`
-- Custom home page: `EdsConfig(siteUrl = "https://www.airlessco.com", homePath = "emea/en/products")`
-- This allows you to set any page as the home page, useful when migrating specific sections of a site
+- Custom home page:
+  `EdsConfig(siteUrl = "https://www.airlessco.com", homePath = "emea/en/products")`
+- This allows you to set any page as the home page, useful when migrating specific sections of a
+  site
 
 ### 2. URL Pattern
+
 The app constructs URLs as:
+
 - **Site URL**: `https://main--aem-boilerplate--adobe.aem.live`
 - **JSON URL**: `{jsonServiceUrl}?url={siteUrl}/{path}&head=false`
 
 ### 3. Custom Blocks
+
 If the EDS site has custom blocks:
-1. Create block composables in `blocks/`
+
+1. Create block composables in `composeApp/src/commonMain/.../blocks/`
 2. Add cases to `BlockRenderer.kt`
 
 ### 4. Theme Customization
+
 Update `theme/Color.kt` with brand colors:
+
 ```kotlin
 val Primary = Color(0xFF...)  // Your primary brand color
 ```
 
 ### 5. App Identity
-- Android: Update `composeApp/src/androidMain/res/values/strings.xml` for app name
+
+- Android: Update `androidApp/src/main/res/values/strings.xml` for app name
 - iOS: Update `iosApp/iosApp/Info.plist`
-- Desktop: Update window title in `jvmMain/kotlin/.../main.kt`
+- Desktop: Update window title in `desktopApp/src/main/kotlin/main.kt`
 
 ## Key Dependencies
 
-| Dependency | Version | Purpose |
-|------------|---------|---------|
-| Compose Multiplatform | 1.10.0-rc01 | Shared UI framework |
-| Kotlin | 2.2.21 | Language |
-| Ktor | 3.3.3 | HTTP networking |
-| Coil | 3.3.0 | Image loading |
-| Koin | 4.1.1 | Dependency injection |
-| Navigation 3 | 1.0.0-alpha06 | Navigation |
-| KMPNotifier | 1.6.1 | Push notifications |
-| Firebase BOM | 34.6.0 | Firebase services |
+| Dependency            | Version       | Purpose                      |
+|-----------------------|---------------|------------------------------|
+| Compose Multiplatform | 1.10.0        | Shared UI framework          |
+| Kotlin                | 2.3.0         | Language                     |
+| AGP                   | 9.0.0         | Android Gradle Plugin        |
+| Gradle                | 9.2.1         | Build system                 |
+| Ktor                  | 3.3.3         | HTTP networking              |
+| Coil                  | 3.3.0         | Image loading                |
+| Koin                  | 4.1.1         | Dependency injection         |
+| Navigation 3          | 1.0.0-alpha06 | Type-safe navigation         |
+| KMPNotifier           | 1.6.1         | Push notifications           |
+| Firebase BOM          | 34.8.0        | Firebase services            |
+
+## Compose Preview Support
+
+Uses the recommended `androidx.compose.ui.tooling.preview.Preview` annotation (not the deprecated
+`org.jetbrains.compose.ui.tooling.preview.Preview`).
+
+**Setup for AGP 9.0 with `com.android.kotlin.multiplatform.library`:**
+
+```kotlin
+// In composeApp/build.gradle.kts
+commonMain.dependencies {
+    implementation(libs.compose.ui.tooling.preview)
+}
+
+// Root-level dependencies block
+dependencies {
+    androidRuntimeClasspath(libs.compose.ui.tooling)
+}
+```
 
 ## CompositionLocal
 
-`LocalEdsConfig` provides `EdsConfig` throughout the composable tree for URL resolution. Screens wrap content with:
+`LocalEdsConfig` provides `EdsConfig` throughout the composable tree for URL resolution. Screens
+wrap content with:
+
 ```kotlin
 CompositionLocalProvider(LocalEdsConfig provides edsConfig) { ... }
 ```
 
 ## Important Files to Modify
 
-| Task | Files |
-|------|-------|
-| Change EDS site | `data/EdsConfig.kt` |
-| Add new block | `blocks/NewBlock.kt`, `blocks/BlockRenderer.kt` |
-| Change colors | `theme/Color.kt` |
-| Add custom fonts | `theme/Typography.kt`, `composeResources/font/` |
-| Modify navigation | `navigation/Routes.kt`, `navigation/AppNavigation.kt` |
-| Android app config | `androidMain/AndroidManifest.xml`, `composeApp/build.gradle.kts` |
-| iOS app config | `iosApp/iosApp/Info.plist` |
+| Task               | Files                                                             |
+|--------------------|-------------------------------------------------------------------|
+| Change EDS site    | `composeApp/.../data/EdsConfig.kt`                                |
+| Add new block      | `composeApp/.../blocks/NewBlock.kt`, `blocks/BlockRenderer.kt`    |
+| Change colors      | `composeApp/.../theme/Color.kt`                                   |
+| Add custom fonts   | `composeApp/.../theme/Typography.kt`, `composeResources/font/`    |
+| Modify navigation  | `composeApp/.../navigation/Routes.kt`, `AppNavigation.kt`         |
+| Android app config | `androidApp/src/main/AndroidManifest.xml`, `androidApp/build.gradle.kts` |
+| iOS app config     | `iosApp/iosApp/Info.plist`                                        |
+| Desktop app config | `desktopApp/src/main/kotlin/main.kt`, `desktopApp/build.gradle.kts` |

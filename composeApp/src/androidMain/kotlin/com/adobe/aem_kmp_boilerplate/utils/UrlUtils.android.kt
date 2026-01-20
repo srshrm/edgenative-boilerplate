@@ -2,10 +2,10 @@ package com.adobe.aem_kmp_boilerplate.utils
 
 import android.content.Intent
 import androidx.core.net.toUri
-import com.adobe.aem_kmp_boilerplate.AndroidApp
+import com.adobe.aem_kmp_boilerplate.AppContextProvider
 
 actual fun openUrl(url: String) {
-    val context = AndroidApp.applicationContext
+    val context = AppContextProvider.applicationContext
     try {
         val intent = Intent(Intent.ACTION_VIEW, url.toUri()).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK

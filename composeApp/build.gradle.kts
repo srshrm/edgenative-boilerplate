@@ -1,29 +1,25 @@
-@file:Suppress("DEPRECATION")
-
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.androidKmpLibrary)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.googleServices)
 }
 
 kotlin {
-    // Suppress deprecation warnings for Preview annotation (KMP uses org.jetbrains namespace)
-    compilerOptions {
-        freeCompilerArgs.add("-Xwarning-level=DEPRECATION:disabled")
+
+    android {
+        namespace = "com.adobe.aem_kmp_boilerplate"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        androidResources.enable = true
+        compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
     }
 
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
+    jvm()
 
     listOf(
         iosArm64(),
@@ -38,13 +34,8 @@ kotlin {
         }
     }
 
-    jvm()
-
     sourceSets {
         androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-
             // Ktor - Android engine
             implementation(libs.ktor.client.okhttp)
 
@@ -53,12 +44,16 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            // Compose Multiplatform
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.animation)
+            implementation(libs.compose.components.resources)
+            implementation(libs.compose.ui.tooling.preview)
+
+            // Lifecycle
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
@@ -70,6 +65,8 @@ kotlin {
 
             // Navigation 3 (KMP-compatible)
             implementation(libs.navigation3.ui)
+            implementation(libs.lifecycle.viewmodel.navigation3)
+            implementation(libs.navigationevent.compose)
 
             // Ktor - HTTP Client
             implementation(libs.ktor.client.core)
@@ -89,6 +86,10 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlin.datetime)
             implementation(libs.kotlinx.coroutines.core)
+
+            // DataStore Preferences
+            implementation(libs.datastore.preferences)
+            implementation(libs.datastore)
 
             // KMPNotifier (Push & Local Notifications)
             api(libs.kmpnotifier)
@@ -113,50 +114,7 @@ kotlin {
     }
 }
 
-android {
-    namespace = "com.adobe.aem_kmp_boilerplate"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    defaultConfig {
-        applicationId = "com.adobe.aem_kmp_boilerplate"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-}
-
+// UI Tooling for Compose previews (AGP 9.0 with android.kmp.library plugin)
 dependencies {
-    debugImplementation(compose.uiTooling)
-    
-    // Firebase (using BOM for version management)
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.messaging)
-    implementation(libs.firebase.analytics)
-}
-
-compose.desktop {
-    application {
-        mainClass = "com.adobe.aem_kmp_boilerplate.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.adobe.aem_kmp_boilerplate"
-            packageVersion = "1.0.0"
-        }
-    }
+    androidRuntimeClasspath(libs.compose.ui.tooling)
 }

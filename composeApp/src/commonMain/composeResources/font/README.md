@@ -5,6 +5,7 @@ Place your brand font files (.ttf or .otf) in this directory.
 ## Naming Convention
 
 Use lowercase names with underscores:
+
 - `brand_regular.ttf`
 - `brand_medium.ttf`
 - `brand_semibold.ttf`
