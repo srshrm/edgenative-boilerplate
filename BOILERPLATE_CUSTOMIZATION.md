@@ -1,6 +1,7 @@
 # Boilerplate Customization Guide
 
-This guide shows you the **minimal changes** needed to customize this boilerplate for your own app and publish it
+This guide shows you the **minimal changes** needed to customize this boilerplate for your own app
+and publish it
 without conflicts.
 
 ## ✅ What Works Out of the Box
@@ -88,7 +89,8 @@ android {
 }
 ```
 
-**Note:** The `namespace` and package structure can remain unchanged. The `applicationId` (Android) and
+**Note:** The `namespace` and package structure can remain unchanged. The `applicationId` (Android)
+and
 `PRODUCT_BUNDLE_IDENTIFIER` (iOS) are sufficient to make your app unique.
 
 ## Update App Icons/Logo
@@ -166,7 +168,8 @@ nativeDistributions {
 
 ## Firebase Setup (Optional)
 
-Push notifications won't work until you set up Firebase. See [FIREBASE_SETUP.md](./FIREBASE_SETUP.md) for details.
+Push notifications won't work until you set up Firebase.
+See [FIREBASE_SETUP.md](./FIREBASE_SETUP.md) for details.
 
 **Quick summary:**
 

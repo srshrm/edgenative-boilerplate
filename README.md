@@ -1,7 +1,9 @@
 # AEM KMP Boilerplate
 
-A Kotlin Multiplatform (KMP) boilerplate for migrating [AEM Edge Delivery Services (EDS)](https://www.aem.live/) sites
-to native **Android**, **iOS**, and **Desktop (JVM)** applications. This starter project provides a complete foundation
+A Kotlin Multiplatform (KMP) boilerplate for
+migrating [AEM Edge Delivery Services (EDS)](https://www.aem.live/) sites
+to native **Android**, **iOS**, and **Desktop (JVM)** applications. This starter project provides a
+complete foundation
 for rendering EDS content natively using Compose Multiplatform.
 
 ## What It Does
@@ -20,7 +22,8 @@ platforms. It includes:
 
 ## Quick Start
 
-> **Note:** This boilerplate builds successfully without any configuration changes. Follow these steps to customize it
+> **Note:** This boilerplate builds successfully without any configuration changes. Follow these
+> steps to customize it
 > for your app.
 
 ### 1. Configure Your EDS Site
@@ -62,7 +65,8 @@ nativeDistributions {
 }
 ```
 
-**Note:** Leave `namespace` and package structure unchanged. Only the application identifiers above need to be
+**Note:** Leave `namespace` and package structure unchanged. Only the application identifiers above
+need to be
 customized.
 
 ### 3. Update App Icons/Logo (Recommended)
@@ -99,7 +103,8 @@ The app builds and runs without Firebase configuration. To enable push notificat
 1. Add an iOS app to the same Firebase project with your `PRODUCT_BUNDLE_IDENTIFIER`
 2. Download `GoogleService-Info.plist` and replace `iosApp/iosApp/GoogleService-Info.plist`
 
-**Note:** The app includes placeholder Firebase files and will skip Firebase initialization if not configured. Push
+**Note:** The app includes placeholder Firebase files and will skip Firebase initialization if not
+configured. Push
 notifications won't work until you add real Firebase configuration files.
 
 **For detailed guides:**
@@ -176,7 +181,8 @@ Build complete Android, iOS, and Desktop applications
 
 ### 2. KMP Library
 
-Integrate the `composeApp` module into existing apps as a library. The module is already configured with
+Integrate the `composeApp` module into existing apps as a library. The module is already configured
+with
 `com.android.kotlin.multiplatform.library` plugin and ready for export.
 
 See [**LIBRARY_EXPORT.md**](./LIBRARY_EXPORT.md) for:
@@ -207,11 +213,12 @@ implementation("com.adobe.aem_kmp_boilerplate:composeApp:1.0.0")
 
 - **Colors**: Edit `composeApp/.../theme/Color.kt`
 - **Typography**: Edit `composeApp/.../theme/Typography.kt`
-- **App Name**: 
-  - Android: `androidApp/src/main/res/values/strings.xml`
-  - iOS: `iosApp/iosApp/Info.plist` (edit for visible name), plus `iosApp/Configuration/Config.xcconfig` (
-    `PRODUCT_NAME`)
-  - Desktop: `desktopApp/src/main/kotlin/main.kt`
+- **App Name**:
+    - Android: `androidApp/src/main/res/values/strings.xml`
+    - iOS: `iosApp/iosApp/Info.plist` (edit for visible name), plus
+      `iosApp/Configuration/Config.xcconfig` (
+      `PRODUCT_NAME`)
+    - Desktop: `desktopApp/src/main/kotlin/main.kt`
 
 ## Documentation
 
@@ -220,19 +227,19 @@ see [CLAUDE.md](./CLAUDE.md).
 
 ## Tech Stack
 
-| Component             | Version       | Purpose                          |
-|-----------------------|---------------|----------------------------------|
-| Kotlin                | 2.3.0         | Language                         |
-| Compose Multiplatform | 1.10.0        | Shared UI framework              |
-| AGP                   | 9.0.0         | Android Gradle Plugin            |
-| Gradle                | 9.2.1         | Build system                     |
-| Ktor                  | 3.3.3         | Networking                       |
-| Koin                  | 4.1.1         | Dependency Injection             |
-| Coil                  | 3.3.0         | Image Loading                    |
-| Navigation 3          | 1.0.0-alpha06 | Type-safe Navigation             |
-| KMPNotifier           | 1.6.1         | Push Notifications               |
-| Firebase BOM          | 34.8.0        | Cloud Messaging & Analytics      |
-| DataStore             | 1.2.0         | Preferences Storage              |
+| Component             | Version       | Purpose                     |
+|-----------------------|---------------|-----------------------------|
+| Kotlin                | 2.3.0         | Language                    |
+| Compose Multiplatform | 1.10.0        | Shared UI framework         |
+| AGP                   | 9.0.0         | Android Gradle Plugin       |
+| Gradle                | 9.2.1         | Build system                |
+| Ktor                  | 3.3.3         | Networking                  |
+| Koin                  | 4.1.1         | Dependency Injection        |
+| Coil                  | 3.3.0         | Image Loading               |
+| Navigation 3          | 1.0.0-alpha06 | Type-safe Navigation        |
+| KMPNotifier           | 1.6.1         | Push Notifications          |
+| Firebase BOM          | 34.8.0        | Cloud Messaging & Analytics |
+| DataStore             | 1.2.0         | Preferences Storage         |
 
 ## Build Commands
 

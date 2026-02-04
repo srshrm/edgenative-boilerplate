@@ -1,6 +1,7 @@
 # CLAUDE.md
 
-Kotlin Multiplatform app rendering AEM Edge Delivery Services content natively on Android, iOS, and Desktop.
+Kotlin Multiplatform app rendering AEM Edge Delivery Services content natively on Android, iOS, and
+Desktop.
 
 **Package**: `com.adobe.aem_kmp_boilerplate`
 
@@ -52,6 +53,7 @@ EdsConfig → EdsApiService → JSON → EdsPage → SectionRenderer → BlockRe
 ## Adding a Block
 
 1. Create `blocks/YourBlock.kt`:
+
 ```kotlin
 @Composable
 fun YourBlock(rows: List<BlockRow>, onLinkClick: (String) -> Unit, modifier: Modifier = Modifier) {
@@ -61,6 +63,7 @@ fun YourBlock(rows: List<BlockRow>, onLinkClick: (String) -> Unit, modifier: Mod
 ```
 
 2. Add case in `BlockRenderer.kt`:
+
 ```kotlin
 blockName.contains("yourblock") -> YourBlock(rows = blockContent, onLinkClick = onLinkClick)
 ```

@@ -1,6 +1,7 @@
 # Firebase Setup Guide
 
-This boilerplate is configured to **build and run without Firebase**. Push notifications will not work until you
+This boilerplate is configured to **build and run without Firebase**. Push notifications will not
+work until you
 complete Firebase setup.
 
 ## Current Status
@@ -105,12 +106,14 @@ Run the app from Xcode and check the console output:
 
 ### Error: "No matching client found for package name"
 
-This means the Google Services plugin is being applied but the `package_name` in `google-services.json` doesn't match
+This means the Google Services plugin is being applied but the `package_name` in
+`google-services.json` doesn't match
 your `applicationId`.
 
 **Solutions:**
 
-1. **Use placeholder file** (current setup): The plugin won't be applied, app will build successfully
+1. **Use placeholder file** (current setup): The plugin won't be applied, app will build
+   successfully
 2. **Update Firebase config**: Create a new Android app in Firebase with your new `applicationId`
 
 ### Changed applicationId but want to keep Firebase
@@ -122,7 +125,8 @@ If you changed `applicationId` and want to keep using Firebase:
 3. Download the new `google-services.json`
 4. Replace the old file
 
-**Note:** The same Firebase project can have multiple Android apps (e.g., debug/release variants with different IDs).
+**Note:** The same Firebase project can have multiple Android apps (e.g., debug/release variants
+with different IDs).
 
 ### iOS App Won't Build
 

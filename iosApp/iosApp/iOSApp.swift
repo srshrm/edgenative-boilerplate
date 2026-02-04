@@ -37,7 +37,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     private func isFirebaseConfigured() -> Bool {
         guard let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
               let plist = NSDictionary(contentsOfFile: path),
-              let projectId = plist["PROJECT_ID"] as? String else {
+              let projectId = plist["PROJECT_ID"] as? String
+        else {
             return false
         }
         // Check if it's still using placeholder values

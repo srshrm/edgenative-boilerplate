@@ -63,35 +63,35 @@ fun AppNavigation(
 
     CompositionLocalProvider(LocalPageCache provides pageCache) {
         ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                DrawerContent(
-                    onNavigate = { path ->
-                        scope.launch {
-                            drawerState.close()
-                            handleLinkClick(
-                                url = path,
-                                edsConfig = edsConfig,
-                                backStack = backStack,
-                                onExternalLink = onExternalLink
-                            )
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet {
+                    DrawerContent(
+                        onNavigate = { path ->
+                            scope.launch {
+                                drawerState.close()
+                                handleLinkClick(
+                                    url = path,
+                                    edsConfig = edsConfig,
+                                    backStack = backStack,
+                                    onExternalLink = onExternalLink
+                                )
+                            }
                         }
-                    }
-                )
-            }
-        }
-    ) {
-        AppNavigationContent(
-            backStack = backStack,
-            edsConfig = edsConfig,
-            onExternalLink = onExternalLink,
-            onMenuClick = {
-                scope.launch {
-                    drawerState.open()
+                    )
                 }
             }
-        )
+        ) {
+            AppNavigationContent(
+                backStack = backStack,
+                edsConfig = edsConfig,
+                onExternalLink = onExternalLink,
+                onMenuClick = {
+                    scope.launch {
+                        drawerState.open()
+                    }
+                }
+            )
         }
     }
 }

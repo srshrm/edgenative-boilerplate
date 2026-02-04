@@ -1,6 +1,7 @@
 # Using as a KMP Library
 
-The `composeApp` module is **already configured as a KMP library** and can be integrated into existing Android, iOS, and
+The `composeApp` module is **already configured as a KMP library** and can be integrated into
+existing Android, iOS, and
 Desktop apps.
 
 ## Quick Start
