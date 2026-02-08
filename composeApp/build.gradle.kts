@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -11,8 +12,11 @@ plugins {
 
 kotlin {
 
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs { browser() }
+
     android {
-        namespace = "com.adobe.aem_kmp_boilerplate"
+        namespace = "com.aem"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         androidResources.enable = true
@@ -28,8 +32,6 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            // Export KMPNotifier for iOS Swift access
-            export(libs.kmpnotifier)
         }
     }
 
@@ -72,6 +74,9 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
 
+            // Ksoup - HTML Parsing
+            implementation(libs.ksoup)
+
             // Coil - Image Loading
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
@@ -86,12 +91,7 @@ kotlin {
             implementation(libs.kotlin.datetime)
             implementation(libs.kotlinx.coroutines.core)
 
-            // DataStore Preferences
-            implementation(libs.datastore.preferences)
-            implementation(libs.datastore)
 
-            // KMPNotifier (Push & Local Notifications)
-            api(libs.kmpnotifier)
         }
 
         commonTest.dependencies {
@@ -109,6 +109,11 @@ kotlin {
 
             // Ktor - JVM engine
             implementation(libs.ktor.client.okhttp)
+        }
+
+        wasmJsMain.dependencies {
+            // Ktor - WASM/JS engine
+            implementation(libs.ktor.client.js)
         }
     }
 }

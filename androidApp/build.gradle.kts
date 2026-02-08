@@ -3,27 +3,16 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.androidApplication)
-    // Google Services plugin applied conditionally below
-}
-
-// Apply Google Services plugin only if real Firebase configuration exists
-// This allows the boilerplate to build without setting up Firebase first
-val googleServicesFile = file("google-services.json")
-val hasRealFirebaseConfig = googleServicesFile.exists() &&
-        !googleServicesFile.readText().contains("YOUR_PROJECT_ID")
-
-if (hasRealFirebaseConfig) {
-    apply(plugin = libs.plugins.googleServices.get().pluginId)
 }
 
 android {
-    namespace = "com.adobe.aem_kmp_boilerplate.app"
+    namespace = "com.aem.app"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        applicationId = "com.adobe.aem_kmp_boilerplate"
+        applicationId = "com.aem"
         versionCode = 1
         versionName = "1.0"
     }
@@ -56,9 +45,4 @@ dependencies {
 
     // Compose UI Tooling for Preview (unified multiplatform library)
     implementation(libs.compose.ui.tooling.preview)
-
-    // Firebase (using BOM for version management)
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.messaging)
-    implementation(libs.firebase.analytics)
 }

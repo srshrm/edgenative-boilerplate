@@ -8,16 +8,15 @@ for rendering EDS content natively using Compose Multiplatform.
 
 ## What It Does
 
-This boilerplate fetches content from AEM EDS sites via JSON and renders it natively on all
-platforms. It includes:
+This boilerplate fetches content from AEM EDS sites via their `.plain.html` endpoints and renders it
+natively on all platforms using [ksoup](https://github.com/fleeksoft/ksoup) for HTML parsing. It
+includes:
 
 - **Block Rendering System** - Native UI components for common EDS blocks (Hero, Cards, Columns)
 - **Navigation** - Type-safe routing with Navigation 3 and deep linking support
 - **Theming** - Material 3 design with customizable colors and typography
-- **Push Notifications** - Cross-platform notifications using Firebase (Android/iOS) and KMPNotifier
 - **Image Loading** - Efficient image handling with Coil
 - **Network Layer** - Ktor-based HTTP client with platform-specific engines
-- **DataStore** - Cross-platform preferences storage
 - **Library Export Ready** - Can be used as a KMP library in existing Android, iOS, and Desktop apps
 
 ## Quick Start
@@ -28,7 +27,7 @@ platforms. It includes:
 
 ### 1. Configure Your EDS Site
 
-Update `composeApp/src/commonMain/kotlin/com/adobe/aem_kmp_boilerplate/data/EdsConfig.kt`:
+Update `composeApp/src/commonMain/kotlin/com/aem/data/EdsConfig.kt`:
 
 ```kotlin
 val DefaultEdsConfig = EdsConfig(
@@ -88,32 +87,12 @@ customized.
 - Replace icon at `desktopApp/src/main/resources/common/ic_notification.png`
 - Update the icon reference in `desktopApp/build.gradle.kts` under `nativeDistributions`
 
-### 4. Firebase Setup (Optional - for Push Notifications)
-
-The app builds and runs without Firebase configuration. To enable push notifications:
-
-**Android:**
-
-1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com)
-2. Add an Android app with your `applicationId`
-3. Download `google-services.json` and replace `androidApp/google-services.json`
-
-**iOS:**
-
-1. Add an iOS app to the same Firebase project with your `PRODUCT_BUNDLE_IDENTIFIER`
-2. Download `GoogleService-Info.plist` and replace `iosApp/iosApp/GoogleService-Info.plist`
-
-**Note:** The app includes placeholder Firebase files and will skip Firebase initialization if not
-configured. Push
-notifications won't work until you add real Firebase configuration files.
-
 **For detailed guides:**
 
 - 📋 [Complete Customization Checklist](./BOILERPLATE_CUSTOMIZATION.md)
-- 🔥 [Firebase Setup Guide](./FIREBASE_SETUP.md)
 - 📦 [Using as a KMP Library](./LIBRARY_EXPORT.md) - Integrate into existing apps
 
-### 5. Run the App
+### 4. Run the App
 
 **Android:**
 
@@ -199,7 +178,7 @@ See [**LIBRARY_EXPORT.md**](./LIBRARY_EXPORT.md) for:
 ./gradlew :composeApp:publishToMavenLocal
 
 # Use in existing Android app
-implementation("com.adobe.aem_kmp_boilerplate:composeApp:1.0.0")
+implementation("com.aem:composeApp:1.0.0")
 ```
 
 ## Customization
@@ -227,19 +206,17 @@ see [CLAUDE.md](./CLAUDE.md).
 
 ## Tech Stack
 
-| Component             | Version       | Purpose                     |
-|-----------------------|---------------|-----------------------------|
-| Kotlin                | 2.3.0         | Language                    |
-| Compose Multiplatform | 1.10.0        | Shared UI framework         |
-| AGP                   | 9.0.0         | Android Gradle Plugin       |
-| Gradle                | 9.2.1         | Build system                |
-| Ktor                  | 3.3.3         | Networking                  |
-| Koin                  | 4.1.1         | Dependency Injection        |
-| Coil                  | 3.3.0         | Image Loading               |
-| Navigation 3          | 1.0.0-alpha06 | Type-safe Navigation        |
-| KMPNotifier           | 1.6.1         | Push Notifications          |
-| Firebase BOM          | 34.8.0        | Cloud Messaging & Analytics |
-| DataStore             | 1.2.0         | Preferences Storage         |
+| Component             | Version       | Purpose                   |
+|-----------------------|---------------|---------------------------|
+| Kotlin                | 2.3.0         | Language                  |
+| Compose Multiplatform | 1.10.0        | Shared UI framework       |
+| AGP                   | 9.0.0         | Android Gradle Plugin     |
+| Gradle                | 9.2.1         | Build system              |
+| Ktor                  | 3.4.0         | Networking                |
+| Ksoup                 | 0.2.5         | HTML Parsing (plain.html) |
+| Koin                  | 4.1.1         | Dependency Injection      |
+| Coil                  | 3.3.0         | Image Loading             |
+| Navigation 3          | 1.0.0-alpha06 | Type-safe Navigation      |
 
 ## Build Commands
 

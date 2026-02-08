@@ -3,7 +3,7 @@
 Kotlin Multiplatform app rendering AEM Edge Delivery Services content natively on Android, iOS, and
 Desktop.
 
-**Package**: `com.adobe.aem_kmp_boilerplate`
+**Package**: `com.aem`
 
 ## Install/Build Commands
 
@@ -25,10 +25,10 @@ open iosApp/iosApp.xcodeproj
 ## Project Structure
 
 ```
-composeApp/src/commonMain/kotlin/com/adobe/aem_kmp_boilerplate/
+composeApp/src/commonMain/kotlin/com/aem/
 ├── App.kt              # Main entry composable
 ├── blocks/             # EDS block renderers (HeroBlock, CardsBlock, etc.)
-├── data/               # Models (EdsPage, ContentNode) + EdsConfig
+├── data/               # Models (EdsPage, EdsSection) + EdsConfig
 ├── navigation/         # Routes + LinkHandler (Navigation 3)
 ├── network/            # EdsApiService + HTTP client
 ├── screens/            # Screen composables
@@ -40,15 +40,15 @@ composeApp/src/commonMain/kotlin/com/adobe/aem_kmp_boilerplate/
 ## Architecture
 
 ```
-EdsConfig → EdsApiService → JSON → EdsPage → SectionRenderer → BlockRenderer
+EdsConfig → EdsApiService → .plain.html → ksoup → EdsPage → SectionRenderer → BlockRenderer
 ```
 
-| Component     | File                       | Purpose                           |
-|---------------|----------------------------|-----------------------------------|
-| EdsConfig     | `data/EdsConfig.kt`        | Site URL, home path, JSON service |
-| EdsApiService | `network/EdsApiService.kt` | Fetch pages via JSON service      |
-| ContentParser | `data/ContentParser.kt`    | Parse JSON to models              |
-| BlockRenderer | `blocks/BlockRenderer.kt`  | Dispatch to block composables     |
+| Component     | File                       | Purpose                              |
+|---------------|----------------------------|--------------------------------------|
+| EdsConfig     | `data/EdsConfig.kt`        | Site URL, home path, plain HTML URLs |
+| EdsApiService | `network/EdsApiService.kt` | Fetch pages via .plain.html          |
+| ContentParser | `data/ContentParser.kt`    | Parse HTML DOM to models (ksoup)     |
+| BlockRenderer | `blocks/BlockRenderer.kt`  | Dispatch to block composables        |
 
 ## Adding a Block
 
@@ -56,16 +56,21 @@ EdsConfig → EdsApiService → JSON → EdsPage → SectionRenderer → BlockRe
 
 ```kotlin
 @Composable
-fun YourBlock(rows: List<BlockRow>, onLinkClick: (String) -> Unit, modifier: Modifier = Modifier) {
+fun YourBlock(
+    block: SectionElement.Block,
+    onLinkClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val edsConfig = LocalEdsConfig.current
-    // Render UI
+    // Use block.rows / block.rows[0].columns[0].element (ksoup Element) to extract content
+    // e.g., column.element.selectFirst("img")?.attr("src") for images
 }
 ```
 
 2. Add case in `BlockRenderer.kt`:
 
 ```kotlin
-blockName.contains("yourblock") -> YourBlock(rows = blockContent, onLinkClick = onLinkClick)
+blockName.contains("yourblock") -> YourBlock(block = block, onLinkClick = onLinkClick)
 ```
 
 ## Key Files to Modify
@@ -83,8 +88,7 @@ blockName.contains("yourblock") -> YourBlock(rows = blockContent, onLinkClick = 
 ```kotlin
 val DefaultEdsConfig = EdsConfig(
     siteUrl = "https://www.example.com",
-    homePath = "emea/en/products",  // Optional: custom home page
-    jsonServiceUrl = "https://mhast-html-to-json.aemrnd.workers.dev"
+    homePath = "emea/en/products"  // Optional: custom home page
 )
 ```
 
@@ -111,7 +115,8 @@ val DefaultEdsConfig = EdsConfig(
 
 ## Dependencies
 
-Compose Multiplatform 1.10.0, Kotlin 2.3.0, AGP 9.0, Ktor 3.3.3, Coil 3.3.0, Navigation 3
+Compose Multiplatform 1.10.0, Kotlin 2.3.0, AGP 9.0, Ktor 3.4.0, Ksoup 0.2.5, Coil 3.3.0, Navigation
+3
 
 ## Claude Code Permissions
 

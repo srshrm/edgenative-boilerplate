@@ -9,9 +9,8 @@ without conflicts.
 The boilerplate is configured to build successfully without any changes:
 
 - ✅ Builds on Android, iOS, and Desktop
-- ✅ No Firebase configuration required
 - ✅ Change `applicationId` without errors
-- ✅ All features work except push notifications (requires Firebase)
+- ✅ All features work out of the box
 
 ## Required Changes for Publishing
 
@@ -21,7 +20,7 @@ The boilerplate is configured to build successfully without any changes:
 
 ```kotlin
 android {
-    namespace = "com.adobe.aem_kmp_boilerplate.app"  // Leave as is
+    namespace = "com.aem.app"  // Leave as is
     
     defaultConfig {
         applicationId = "com.yourcompany.yourapp"  // CRITICAL: Must be unique on Play Store
@@ -85,7 +84,7 @@ compose.desktop {
 
 ```kotlin
 android {
-    namespace = "com.adobe.aem_kmp_boilerplate"  // Leave as is
+    namespace = "com.aem"  // Leave as is
 }
 ```
 
@@ -166,19 +165,6 @@ nativeDistributions {
 - Windows: `.ico` file
 - Linux: `.png` file (512x512 px)
 
-## Firebase Setup (Optional)
-
-Push notifications won't work until you set up Firebase.
-See [FIREBASE_SETUP.md](./FIREBASE_SETUP.md) for details.
-
-**Quick summary:**
-
-1. Create Firebase project at https://console.firebase.google.com
-2. Add Android app with your `applicationId`
-3. Download `google-services.json` → Replace `androidApp/google-services.json`
-4. Add iOS app with your `PRODUCT_BUNDLE_IDENTIFIER`
-5. Download `GoogleService-Info.plist` → Replace `iosApp/iosApp/GoogleService-Info.plist`
-
 ## Build Verification
 
 After making changes, verify builds work:
@@ -223,23 +209,11 @@ open iosApp/iosApp.xcodeproj
 
 **Leave Unchanged:**
 
-- [ ] `namespace` fields (Android/Shared) - Keep as `com.adobe.aem_kmp_boilerplate`
+- [ ] `namespace` fields (Android/Shared) - Keep as `com.aem`
 - [ ] Package folder structure - Keep as is
 - [ ] Package declarations in Kotlin files - Keep as is
 
 **Optional:**
 
-- [ ] Set up Firebase (if using push notifications)
 - [ ] Customized theme colors
 - [ ] Updated splash screens
-
-## What Makes This Different
-
-Most boilerplates require Firebase configuration before building. This boilerplate:
-
-1. **Builds without Firebase** - The Google Services plugin is applied conditionally
-2. **Flexible `applicationId`** - Change it anytime without Firebase errors
-3. **Clear placeholders** - Placeholder files include instructions
-4. **Graceful degradation** - App works without Firebase, just no push notifications
-
-See [FIREBASE_SETUP.md](./FIREBASE_SETUP.md) for technical details on how this works.
