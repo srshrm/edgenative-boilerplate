@@ -8,7 +8,7 @@ plugins {
 
 dependencies {
     implementation(project(":composeApp"))
-    implementation(libs.compose.desktop.currentOs)
+    implementation(libs.compose.desktop)
     implementation(libs.compose.ui)
     implementation(libs.kotlinx.coroutines.swing)
 }
@@ -16,6 +16,9 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "MainKt"
+
+        // Workaround for Skiko Metal native library issue on macOS
+        jvmArgs += "-Dskiko.renderApi=SOFTWARE"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)

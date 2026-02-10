@@ -16,7 +16,7 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.adobe.aem_kmp_boilerplate"
+group = "com.aem"
 version = "1.0.0"
 
 publishing {
@@ -59,14 +59,14 @@ dependencyResolutionManagement {
 
 ```kotlin
 dependencies {
-    implementation("com.adobe.aem_kmp_boilerplate:composeApp:1.0.0")
+    implementation("com.aem:composeApp:1.0.0")
 }
 ```
 
 **3. Use in Activity:**
 
 ```kotlin
-import com.adobe.aem_kmp_boilerplate.App
+import com.aem.App
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,7 +98,9 @@ struct ComposeAppView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         return MainViewControllerKt.MainViewController()
     }
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+    }
 }
 ```
 
@@ -117,14 +119,14 @@ repositories {
 
 ```kotlin
 dependencies {
-    implementation("com.adobe.aem_kmp_boilerplate:composeApp-jvm:1.0.0")
+    implementation("com.aem:composeApp-jvm:1.0.0")
 }
 ```
 
 **3. Use in main:**
 
 ```kotlin
-import com.adobe.aem_kmp_boilerplate.App
+import com.aem.App
 
 fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
@@ -176,12 +178,12 @@ Then: `./gradlew :composeApp:publish`
 
 ### Exposing Dependencies
 
-The library uses `api` for consumer-facing dependencies:
+The library uses `implementation` for internal dependencies and `api` for consumer-facing ones:
 
 ```kotlin
 commonMain.dependencies {
-    api(libs.kmpnotifier)  // Exposed to consumers
     implementation(libs.ktor.client.core)  // Internal only
+    // To expose a dependency to consumers, change to api()
 }
 ```
 
@@ -193,7 +195,7 @@ To expose more, change `implementation` to `api`.
 iosTarget.binaries.framework {
     baseName = "ComposeApp"
     isStatic = true
-    export(libs.kmpnotifier)  // Accessible from Swift
+    // export(libs.someLibrary)  // Add api deps here to make accessible from Swift
 }
 ```
 
@@ -207,7 +209,7 @@ Add to `proguard-rules.pro`:
 -keep class coil3.** { *; }
 -keep class org.koin.** { *; }
 -keepattributes *Annotation*
--keep,includedescriptorclasses class com.adobe.aem_kmp_boilerplate.**$$serializer { *; }
+-keep,includedescriptorclasses class com.aem.**$$serializer { *; }
 ```
 
 ## Troubleshooting
