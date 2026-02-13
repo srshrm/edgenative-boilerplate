@@ -63,6 +63,16 @@ data class EdsConfig(
     }
 
     /**
+     * Construct the plain HTML URL for the navigation (nav.plain.html).
+     * EDS sites conventionally serve nav content at {siteUrl}/nav.plain.html.
+     *
+     * @return The full nav plain HTML URL
+     */
+    fun getNavUrl(): String {
+        return "$siteUrl/nav.plain.html"
+    }
+
+    /**
      * Resolve a relative URL to an absolute URL.
      * Handles URLs starting with "./", "/", or already absolute URLs.
      *

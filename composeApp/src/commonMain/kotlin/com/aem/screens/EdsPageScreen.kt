@@ -31,6 +31,7 @@ import com.aem.data.EdsPage
 import com.aem.data.LocalEdsConfig
 import com.aem.data.LocalPageCache
 import com.aem.theme.Spacing
+import com.aem.utils.supportsPullToRefresh
 import kotlinx.coroutines.launch
 
 /**
@@ -93,17 +94,11 @@ fun EdsPageScreen(
     }
 
     CompositionLocalProvider(LocalEdsConfig provides edsConfig) {
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = {
-                isRefreshing = true
-                pageCache.remove(cacheKey)
-                coroutineScope.launch { loadPage(forceRefresh = true) }
-            },
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
+        val contentModifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+
+        val screenContent: @Composable () -> Unit = {
             when {
                 isLoading -> LoadingContent()
 
@@ -120,6 +115,24 @@ fun EdsPageScreen(
                     page = pageData!!,
                     onLinkClick = onNavigate
                 )
+            }
+        }
+
+        if (supportsPullToRefresh) {
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                onRefresh = {
+                    isRefreshing = true
+                    pageCache.remove(cacheKey)
+                    coroutineScope.launch { loadPage(forceRefresh = true) }
+                },
+                modifier = contentModifier
+            ) {
+                screenContent()
+            }
+        } else {
+            Box(modifier = contentModifier) {
+                screenContent()
             }
         }
     }
