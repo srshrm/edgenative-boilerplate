@@ -3,6 +3,8 @@ package com.aem.network
 import com.aem.data.ContentParser
 import com.aem.data.EdsConfig
 import com.aem.data.EdsPage
+import com.aem.data.NavData
+import com.aem.data.NavParser
 import com.fleeksoft.ksoup.Ksoup
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -62,6 +64,41 @@ class EdsApiService(
      */
     suspend fun fetchHomePage(config: EdsConfig): Result<EdsPage> {
         return fetchPage(config, config.homePath)
+    }
+
+    /**
+     * Fetch the navigation data from nav.plain.html.
+     *
+     * EDS sites serve navigation structure at {siteUrl}/nav.plain.html.
+     * The HTML is parsed into a [NavData] model containing the brand,
+     * navigation sections, and their child items.
+     *
+     * @param config The EDS site configuration
+     * @return Result containing the parsed NavData or an error
+     */
+    suspend fun fetchNav(config: EdsConfig): Result<NavData> {
+        return try {
+            val url = config.getNavUrl()
+            val response = httpClient.get(url)
+
+            if (response.status.isSuccess()) {
+                val html = response.bodyAsText()
+                val doc = Ksoup.parse(html = html, baseUri = config.siteUrl)
+                val navData = NavParser.parseNav(doc)
+                Result.success(navData)
+            } else {
+                Result.failure(
+                    EdsApiException(
+                        "Failed to fetch nav: HTTP ${response.status.value}",
+                        response.status.value
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            Result.failure(
+                EdsApiException("Network error fetching nav: ${e.message}", cause = e)
+            )
+        }
     }
 
     /**

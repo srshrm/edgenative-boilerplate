@@ -10,7 +10,7 @@ import kotlinx.browser.window
 import org.w3c.dom.HTMLElement
 
 /**
- * Web entry point for AEM KMP Preview - WasmJS target.
+ * Web entry point for EdgeNative Preview - WasmJS target.
  * Renders the App() composable inside a Pixel 10-style phone frame.
  *
  * Pixel 10: 1080×2424, 422 PPI → viewport ≈ 412dp wide.

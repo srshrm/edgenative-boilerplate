@@ -12,7 +12,7 @@ import com.aem.utils.openUrl
  * Main application entry point.
  * Sets up the theme, navigation, and EDS configuration.
  *
- * @param edsConfig The EDS site configuration. Defaults to AEM Boilerplate.
+ * @param edsConfig The EDS site configuration. Defaults to EdgeNative Boilerplate.
  */
 @Composable
 @Preview

@@ -1,4 +1,4 @@
-rootProject.name = "AEMKMPBoilerplate"
+rootProject.name = "EdgeNativeBoilerplate"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

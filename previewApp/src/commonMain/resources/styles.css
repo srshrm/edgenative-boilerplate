@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   AEM KMP Preview – Pixel 10 Device Frame
+   EdgeNative Preview – Pixel 10 Device Frame
    Device : 152.8 × 72mm, 8.6mm thick
    Screen : 6.3", 1080×2424, 20:9
    ═══════════════════════════════════════════ */
@@ -89,21 +89,23 @@ html, body {
     background: #000;
 }
 
-/* ── Punch-Hole Camera ── */
+/* ── Punch-Hole Camera ──
+   Tiny dot like a real Pixel punch-hole.
+   Sits on top of app content (edge-to-edge). */
 .phone-camera {
     position: absolute;
-    top: 10px;
+    top: 8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 16px;
-    height: 16px;
-    background: #444;
+    width: 10px;
+    height: 10px;
+    background: #111;
     border-radius: 50%;
-    border: 4px solid #1a1a1a;
+    border: 2px solid #1a1a1a;
     box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.05),
         inset 0 0 2px rgba(0, 0, 0, 0.9);
     z-index: 20;
+    pointer-events: none;
 }
 
 /* ── App Screen (Compose viewport) ── */

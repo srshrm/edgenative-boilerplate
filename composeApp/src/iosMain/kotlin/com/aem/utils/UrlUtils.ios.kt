@@ -8,3 +8,5 @@ actual fun openUrl(url: String) {
     UIApplication.sharedApplication.openURL(nsUrl)
 }
 
+actual val supportsPullToRefresh: Boolean = true
+

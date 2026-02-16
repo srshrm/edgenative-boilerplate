@@ -17,3 +17,5 @@ actual fun openUrl(url: String) {
     }
 }
 
+actual val supportsPullToRefresh: Boolean = true
+

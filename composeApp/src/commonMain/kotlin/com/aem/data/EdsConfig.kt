@@ -1,7 +1,7 @@
 package com.aem.data
 
 /**
- * Default EDS configuration for the AEM Boilerplate site.
+ * Default EDS configuration for the EdgeNative Boilerplate site.
  */
 val DefaultEdsConfig = EdsConfig(
     siteUrl = "https://main--aem-boilerplate--adobe.aem.live",
@@ -60,6 +60,16 @@ data class EdsConfig(
     fun getPageUrl(path: String): String {
         val cleanPath = path.trimStart('/')
         return if (cleanPath.isEmpty()) siteUrl else "$siteUrl/$cleanPath"
+    }
+
+    /**
+     * Construct the plain HTML URL for the navigation (nav.plain.html).
+     * EDS sites conventionally serve nav content at {siteUrl}/nav.plain.html.
+     *
+     * @return The full nav plain HTML URL
+     */
+    fun getNavUrl(): String {
+        return "$siteUrl/nav.plain.html"
     }
 
     /**

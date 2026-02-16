@@ -7,6 +7,13 @@ package com.aem.utils
 expect fun openUrl(url: String)
 
 /**
+ * Whether pull-to-refresh gesture is supported on this platform.
+ * True on touch-based platforms (Android, iOS), false on pointer/mouse
+ * platforms (wasmJs, desktop) where the gesture doesn't work reliably.
+ */
+expect val supportsPullToRefresh: Boolean
+
+/**
  * Clean and normalize a URL path.
  */
 fun normalizePath(path: String): String {

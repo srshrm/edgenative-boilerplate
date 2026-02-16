@@ -5,7 +5,7 @@ import com.aem.App
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "AEMKMPBoilerplate",
+        title = "EdgeNative Boilerplate",
     ) {
         App()
     }

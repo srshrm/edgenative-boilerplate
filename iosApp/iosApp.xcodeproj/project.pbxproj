@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		39F49D363C9208CB6DE3A053 /* AEMKMPBoilerplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AEMKMPBoilerplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		39F49D363C9208CB6DE3A053 /* EdgeNativeBoilerplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EdgeNativeBoilerplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,7 +50,7 @@
 		5736C1505A379E840C0377C0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				39F49D363C9208CB6DE3A053 /* AEMKMPBoilerplate.app */,
+				39F49D363C9208CB6DE3A053 /* EdgeNativeBoilerplate.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			packageProductDependencies = (
 			);
 			productName = iosApp;
-			productReference = 39F49D363C9208CB6DE3A053 /* AEMKMPBoilerplate.app */;
+			productReference = 39F49D363C9208CB6DE3A053 /* EdgeNativeBoilerplate.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

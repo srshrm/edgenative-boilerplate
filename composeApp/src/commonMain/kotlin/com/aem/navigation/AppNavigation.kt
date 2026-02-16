@@ -1,25 +1,15 @@
 package com.aem.navigation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -27,17 +17,21 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import com.aem.blocks.DrawerNavContent
 import com.aem.data.DefaultEdsConfig
 import com.aem.data.EdsConfig
 import com.aem.data.LocalPageCache
+import com.aem.data.NavData
 import com.aem.data.PageCache
 import com.aem.data.rememberPageCache
 import com.aem.network.EdsApiService
@@ -46,7 +40,8 @@ import kotlinx.coroutines.launch
 
 /**
  * Main navigation host using Navigation 3 with NavDisplay.
- * Includes a global ModalNavigationDrawer accessible from all screens.
+ * Includes a global ModalNavigationDrawer with dynamically fetched nav content
+ * from the EDS site's nav.plain.html.
  *
  * @param edsConfig The EDS site configuration
  * @param onExternalLink Callback for handling external links (opens browser)
@@ -61,13 +56,39 @@ fun AppNavigation(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val pageCache = rememberPageCache()
+    val apiService = remember { EdsApiService() }
+
+    // Nav data state
+    var navData by remember { mutableStateOf<NavData?>(null) }
+    var navLoading by remember { mutableStateOf(true) }
+    var navError by remember { mutableStateOf<String?>(null) }
+
+    // Fetch nav data on first composition
+    LaunchedEffect(edsConfig) {
+        navLoading = true
+        navError = null
+        val result = apiService.fetchNav(edsConfig)
+        result.fold(
+            onSuccess = {
+                navData = it
+                navLoading = false
+            },
+            onFailure = {
+                navError = it.message
+                navLoading = false
+            }
+        )
+    }
 
     CompositionLocalProvider(LocalPageCache provides pageCache) {
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet {
-                    DrawerContent(
+                    DrawerNavContent(
+                        navData = navData,
+                        isLoading = navLoading,
+                        errorMessage = navError,
                         onNavigate = { path ->
                             scope.launch {
                                 drawerState.close()
@@ -78,6 +99,9 @@ fun AppNavigation(
                                     onExternalLink = onExternalLink
                                 )
                             }
+                        },
+                        onClose = {
+                            scope.launch { drawerState.close() }
                         }
                     )
                 }
@@ -86,6 +110,8 @@ fun AppNavigation(
             AppNavigationContent(
                 backStack = backStack,
                 edsConfig = edsConfig,
+                apiService = apiService,
+                brandTitle = navData?.brand?.title,
                 onExternalLink = onExternalLink,
                 onMenuClick = {
                     scope.launch {
@@ -102,17 +128,20 @@ fun AppNavigation(
 private fun AppNavigationContent(
     backStack: SnapshotStateList<Any>,
     edsConfig: EdsConfig,
+    apiService: EdsApiService,
+    brandTitle: String?,
     onExternalLink: (String) -> Unit,
     onMenuClick: () -> Unit
 ) {
     val currentRoute = backStack.lastOrNull()
+    val title = brandTitle ?: "AEM App"
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "AEM App",
+                        text = title,
                         style = MaterialTheme.typography.titleLarge
                     )
                 },
@@ -164,7 +193,6 @@ private fun AppNavigationContent(
             )
         }
     ) { paddingValues ->
-        val apiService = remember { EdsApiService() }
         val onNavigate: (String) -> Unit = { url ->
             handleLinkClick(
                 url = url,
@@ -210,55 +238,6 @@ private fun AppNavigationContent(
                     }
                 }
             }
-        )
-    }
-}
-
-/**
- * Drawer content with navigation items.
- */
-@Composable
-private fun DrawerContent(
-    onNavigate: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(vertical = 16.dp)
-    ) {
-        // Drawer Header
-        Text(
-            text = "AEM App",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp)
-        )
-
-        HorizontalDivider()
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Navigation Items
-        NavigationDrawerItem(
-            label = { Text("Home") },
-            selected = false,
-            onClick = { onNavigate("/") },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text("About") },
-            selected = false,
-            onClick = { onNavigate("/about") },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text("Contact") },
-            selected = false,
-            onClick = { onNavigate("/contact") },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
     }
 }

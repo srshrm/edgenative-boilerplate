@@ -1,4 +1,4 @@
-# AEM KMP Boilerplate
+# EdgeNative Boilerplate
 
 A Kotlin Multiplatform (KMP) boilerplate for
 migrating [AEM Edge Delivery Services (EDS)](https://www.aem.live/) sites
@@ -119,7 +119,7 @@ open iosApp/iosApp.xcodeproj
 This project uses the new AGP 9.0 module separation pattern:
 
 ```
-aem-kmp-boilerplate/
+edgenative-boilerplate/
 ├── composeApp/          # Shared KMP library (com.android.kotlin.multiplatform.library)
 │   └── src/
 │       ├── commonMain/  # Shared code for all platforms

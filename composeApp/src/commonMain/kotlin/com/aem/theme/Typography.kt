@@ -23,11 +23,11 @@ import androidx.compose.ui.unit.sp
 // =============================================================================
 
 // TODO: Uncomment these imports after adding font files
-// import aemkmpboilerplate.composeapp.generated.resources.Res
-// import aemkmpboilerplate.composeapp.generated.resources.brand_regular
-// import aemkmpboilerplate.composeapp.generated.resources.brand_medium
-// import aemkmpboilerplate.composeapp.generated.resources.brand_semibold
-// import aemkmpboilerplate.composeapp.generated.resources.brand_bold
+// import edgenativeboilerplate.composeapp.generated.resources.Res
+// import edgenativeboilerplate.composeapp.generated.resources.brand_regular
+// import edgenativeboilerplate.composeapp.generated.resources.brand_medium
+// import edgenativeboilerplate.composeapp.generated.resources.brand_semibold
+// import edgenativeboilerplate.composeapp.generated.resources.brand_bold
 // import org.jetbrains.compose.resources.Font
 
 /**
