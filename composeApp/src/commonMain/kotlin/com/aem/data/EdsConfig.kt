@@ -1,7 +1,7 @@
 package com.aem.data
 
 /**
- * Default EDS configuration for the AEM Boilerplate site.
+ * Default EDS configuration for the EdgeNative Boilerplate site.
  */
 val DefaultEdsConfig = EdsConfig(
     siteUrl = "https://main--aem-boilerplate--adobe.aem.live",
