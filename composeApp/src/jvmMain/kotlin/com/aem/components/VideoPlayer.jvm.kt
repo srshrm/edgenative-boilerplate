@@ -2,7 +2,8 @@ package com.aem.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,11 +24,17 @@ actual fun VideoPlayer(
     autoPlay: Boolean,
     loop: Boolean,
     muted: Boolean,
+    showControls: Boolean,
     modifier: Modifier,
 ) {
+    val videoModifier = if (modifier == Modifier) {
+        Modifier.fillMaxWidth().aspectRatio(16f / 9f)
+    } else {
+        modifier
+    }
+
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = videoModifier
             .background(Color.Black),
         contentAlignment = Alignment.Center,
     ) {

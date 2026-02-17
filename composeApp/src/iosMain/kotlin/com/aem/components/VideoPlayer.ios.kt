@@ -1,13 +1,16 @@
 package com.aem.components
 
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.UIKitView
+import androidx.compose.ui.viewinterop.UIKitViewController
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.readValue
-import platform.AVFoundation.AVLayerVideoGravityResizeAspectFill
+import platform.AVFoundation.AVLayerVideoGravityResizeAspect
 import platform.AVFoundation.AVPlayer
 import platform.AVFoundation.AVPlayerItem
 import platform.AVFoundation.AVPlayerItemDidPlayToEndTimeNotification
@@ -17,6 +20,7 @@ import platform.AVFoundation.pause
 import platform.AVFoundation.play
 import platform.AVFoundation.seekToTime
 import platform.AVFoundation.setMuted
+import platform.AVKit.AVPlayerViewController
 import platform.CoreGraphics.CGRectZero
 import platform.CoreMedia.CMTimeMake
 import platform.Foundation.NSNotificationCenter
@@ -30,6 +34,7 @@ actual fun VideoPlayer(
     autoPlay: Boolean,
     loop: Boolean,
     muted: Boolean,
+    showControls: Boolean,
     modifier: Modifier,
 ) {
     val player = remember(url) {
@@ -40,7 +45,6 @@ actual fun VideoPlayer(
         }
     } ?: return
 
-    // Loop support via notification
     DisposableEffect(url, loop) {
         val observer = if (loop) {
             NSNotificationCenter.defaultCenter.addObserverForName(
@@ -61,27 +65,54 @@ actual fun VideoPlayer(
         }
     }
 
-    UIKitView(
-        factory = {
-            val container = object : UIView(frame = CGRectZero.readValue()) {
-                override fun layoutSubviews() {
-                    super.layoutSubviews()
-                    val playerLayer = layer.sublayers?.firstOrNull() as? AVPlayerLayer
-                    playerLayer?.setFrame(bounds)
+    val videoModifier = if (modifier == Modifier) {
+        Modifier.fillMaxWidth().aspectRatio(16f / 9f)
+    } else {
+        modifier
+    }
+
+    if (showControls) {
+        // AVPlayerViewController provides native iOS playback controls
+        // (play/pause, scrubber, AirPlay, fullscreen, etc.)
+        UIKitViewController(
+            factory = {
+                AVPlayerViewController().apply {
+                    this.player = player
+                    this.showsPlaybackControls = true
                 }
-            }
-            val playerLayer = AVPlayerLayer.playerLayerWithPlayer(player).apply {
-                videoGravity = AVLayerVideoGravityResizeAspectFill
-            }
-            container.layer.addSublayer(playerLayer)
+            },
+            modifier = videoModifier,
+        )
 
-            // Start playback
-            if (autoPlay) {
+        if (autoPlay) {
+            DisposableEffect(url) {
                 player.play()
+                onDispose { }
             }
+        }
+    } else {
+        // Raw AVPlayerLayer for chromeless background/hero video
+        UIKitView(
+            factory = {
+                val container = object : UIView(frame = CGRectZero.readValue()) {
+                    override fun layoutSubviews() {
+                        super.layoutSubviews()
+                        val playerLayer = layer.sublayers?.firstOrNull() as? AVPlayerLayer
+                        playerLayer?.setFrame(bounds)
+                    }
+                }
+                val playerLayer = AVPlayerLayer.playerLayerWithPlayer(player).apply {
+                    videoGravity = AVLayerVideoGravityResizeAspect
+                }
+                container.layer.addSublayer(playerLayer)
 
-            container
-        },
-        modifier = modifier,
-    )
+                if (autoPlay) {
+                    player.play()
+                }
+
+                container
+            },
+            modifier = videoModifier,
+        )
+    }
 }

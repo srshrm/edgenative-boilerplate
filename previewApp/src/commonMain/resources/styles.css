@@ -1,10 +1,7 @@
-/* ═══════════════════════════════════════════
-   EdgeNative Preview – Pixel 10 Device Frame
-   Device : 152.8 × 72mm, 8.6mm thick
-   Screen : 6.3", 1080×2424, 20:9
-   ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   EdgeNative Preview – Full-page app
+   ═══════════════════════════════════ */
 
-/* ── Reset ── */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -15,127 +12,9 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #111119;
+    background: #fff;
     font-family: system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
-}
-
-/* ── Centered layout ── */
-.device-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 16px;
-}
-
-/* ── Pixel 10 Body ──
-   Realistic scale: 72mm width ≈ 375px on screen.
-   Body ratio: 152.8 / 72 ≈ 2.12 : 1
-   Max height: 375 × 2.12 ≈ 795px */
-.phone-frame {
-    position: relative;
-    width: 375px;
-    height: calc(100vh - 32px);
-    max-height: 795px;
-    min-height: 540px;
-    background: #1a1a1a;
-    border-radius: 34px;
-    border: 2px solid #333;
-    box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.06),
-        0 24px 64px rgba(0, 0, 0, 0.6),
-        0 8px 24px rgba(0, 0, 0, 0.4);
-    display: flex;
-    flex-direction: column;
-    /* NO overflow:hidden — buttons must be visible outside the frame */
-}
-
-/* ── Side Buttons (both on right side) ──
-   Power button on top, single volume rocker below (2× height of power). */
-.btn-power {
-    position: absolute;
-    right: -5px;
-    top: 150px;
-    width: 4px;
-    height: 40px;
-    background: linear-gradient(to right, #2a2a2a, #444);
-    border-radius: 0 3px 3px 0;
-    z-index: 20;
-    box-shadow: 1px 0 2px rgba(0, 0, 0, 0.4);
-}
-
-.btn-volume {
-    position: absolute;
-    right: -5px;
-    top: 200px;
-    width: 4px;
-    height: 80px;
-    background: linear-gradient(to right, #2a2a2a, #444);
-    border-radius: 0 3px 3px 0;
-    z-index: 20;
-    box-shadow: 1px 0 2px rgba(0, 0, 0, 0.4);
-}
-
-/* ── Screen Bezel ──
-   Ultra-thin uniform bezel. Clips screen content. */
-.phone-bezel {
-    position: relative;
-    flex: 1;
-    margin: 6px;
-    border-radius: 30px;
-    overflow: hidden;
-    background: #000;
-}
-
-/* ── Punch-Hole Camera ──
-   Tiny dot like a real Pixel punch-hole.
-   Sits on top of app content (edge-to-edge). */
-.phone-camera {
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 10px;
-    height: 10px;
-    background: #111;
-    border-radius: 50%;
-    border: 2px solid #1a1a1a;
-    box-shadow:
-        inset 0 0 2px rgba(0, 0, 0, 0.9);
-    z-index: 20;
-    pointer-events: none;
-}
-
-/* ── App Screen (Compose viewport) ── */
-.phone-screen {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #fff;
-    position: relative;
-}
-
-/* Compose canvas fills the entire screen */
-.phone-screen canvas {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* ── Home Indicator ── */
-.home-indicator {
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 96px;
-    height: 4px;
-    background: rgba(0, 0, 0, 0.22);
-    border-radius: 2px;
-    z-index: 20;
-    pointer-events: none;
 }
 
 /* ── Loading Spinner ── */
@@ -167,33 +46,4 @@ html, body {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
-}
-
-/* ── Responsive ── */
-@media (max-height: 620px) {
-    .phone-frame {
-        min-height: 460px;
-        border-radius: 28px;
-    }
-    .phone-bezel {
-        border-radius: 24px;
-    }
-}
-
-@media (max-width: 420px) {
-    .phone-frame {
-        width: 100%;
-        border-radius: 0;
-        border-width: 0;
-        height: 100vh;
-        max-height: none;
-    }
-    .phone-bezel {
-        margin: 0;
-        border-radius: 0;
-    }
-    .btn-power,
-    .btn-volume {
-        display: none;
-    }
 }
