@@ -215,7 +215,7 @@ internal fun ErrorContent(
 /**
  * Maps raw exception to a user-friendly error message.
  */
-private fun userFriendlyError(e: Throwable): String {
+fun userFriendlyError(e: Throwable): String {
     val msg = e.message.orEmpty().lowercase()
     return when {
         "timeout" in msg -> "The request timed out. Please check your connection and try again."
