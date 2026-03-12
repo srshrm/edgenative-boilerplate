@@ -115,7 +115,7 @@ val DefaultEdsConfig = EdsConfig(
 
 ## Dependencies
 
-Compose Multiplatform 1.10.0, Kotlin 2.3.0, AGP 9.0, Ktor 3.4.0, Ksoup 0.2.5, Coil 3.3.0, Navigation
+Compose Multiplatform 1.10.2, Kotlin 2.3.10, AGP 9.1.0, Ktor 3.4.1, Ksoup 0.2.6, Coil 3.4.0, Navigation
 3
 
 ## Claude Code Permissions

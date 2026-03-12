@@ -208,14 +208,14 @@ see [CLAUDE.md](./CLAUDE.md).
 
 | Component             | Version       | Purpose                   |
 |-----------------------|---------------|---------------------------|
-| Kotlin                | 2.3.0         | Language                  |
-| Compose Multiplatform | 1.10.0        | Shared UI framework       |
-| AGP                   | 9.0.0         | Android Gradle Plugin     |
-| Gradle                | 9.2.1         | Build system              |
-| Ktor                  | 3.4.0         | Networking                |
-| Ksoup                 | 0.2.5         | HTML Parsing (plain.html) |
+| Kotlin                | 2.3.10        | Language                  |
+| Compose Multiplatform | 1.10.2        | Shared UI framework       |
+| AGP                   | 9.1.0         | Android Gradle Plugin     |
+| Gradle                | 9.4.0         | Build system              |
+| Ktor                  | 3.4.1         | Networking                |
+| Ksoup                 | 0.2.6         | HTML Parsing (plain.html) |
 | Koin                  | 4.1.1         | Dependency Injection      |
-| Coil                  | 3.3.0         | Image Loading             |
+| Coil                  | 3.4.0         | Image Loading             |
 | Navigation 3          | 1.0.0-alpha06 | Type-safe Navigation      |
 
 ## Build Commands
