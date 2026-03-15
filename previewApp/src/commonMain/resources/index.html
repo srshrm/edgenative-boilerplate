@@ -5,6 +5,24 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>EdgeNative Preview</title>
     <link href="styles.css" rel="stylesheet">
+    <!--
+      Polyfill: Headless Chromium (Playwright) ships without ICU locale data,
+      causing Intl.Locale to throw RangeError during Compose font loading.
+      This shim falls back to "en-US" so composition doesn't crash.
+    -->
+    <script>
+    (function() {
+        try { new Intl.Locale('en-US'); } catch (_) {
+            var _Locale = Intl.Locale;
+            Intl.Locale = function(tag, opts) {
+                try { return new _Locale(tag, opts); } catch (_) {
+                    return new _Locale('en-US', opts);
+                }
+            };
+            Intl.Locale.prototype = _Locale.prototype;
+        }
+    })();
+    </script>
 </head>
 <body>
 <div class="loading" id="loading">
