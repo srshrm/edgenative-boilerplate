@@ -24,7 +24,7 @@ val edsJson = Json {
 /**
  * Create a configured HTTP client for EDS API calls.
  */
-fun createEdsHttpClient(): HttpClient {
+fun createHttpClient(): HttpClient {
     return createPlatformHttpClient().config {
         install(ContentNegotiation) {
             json(edsJson)

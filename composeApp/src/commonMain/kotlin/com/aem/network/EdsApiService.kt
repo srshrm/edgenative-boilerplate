@@ -21,7 +21,7 @@ import io.ktor.http.isSuccess
  * @param httpClient The HTTP client to use for requests
  */
 class EdsApiService(
-    private val httpClient: HttpClient = createPlatformHttpClient()
+    private val httpClient: HttpClient = createHttpClient()
 ) {
     /**
      * Fetch an EDS page by parsing its plain HTML content.
@@ -97,6 +97,43 @@ class EdsApiService(
         } catch (e: Exception) {
             Result.failure(
                 EdsApiException("Network error fetching nav: ${e.message}", cause = e)
+            )
+        }
+    }
+
+    /**
+     * Fetch JSON data from a URL and deserialize it as a string.
+     *
+     * Used by dynamic blocks that load data from `.json` endpoints at runtime.
+     * The caller is responsible for deserializing the JSON string into the
+     * appropriate data class.
+     *
+     * @param url The full or relative JSON data URL (e.g., "/data/products.json?sheet=emea_en")
+     * @param baseUrl Optional base URL to resolve relative URLs against. If null, the URL is used as-is.
+     * @return Result containing the raw JSON string or an error
+     */
+    suspend fun fetchJsonData(url: String, baseUrl: String? = null): Result<String> {
+        return try {
+            val resolvedUrl = if (baseUrl != null && !url.startsWith("http")) {
+                "${baseUrl.trimEnd('/')}/${url.trimStart('/')}"
+            } else {
+                url
+            }
+            val response: HttpResponse = httpClient.get(resolvedUrl)
+
+            if (response.status.isSuccess()) {
+                Result.success(response.bodyAsText())
+            } else {
+                Result.failure(
+                    EdsApiException(
+                        "Failed to fetch JSON data: HTTP ${response.status.value}",
+                        response.status.value
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            Result.failure(
+                EdsApiException("Network error fetching JSON data: ${e.message}", cause = e)
             )
         }
     }

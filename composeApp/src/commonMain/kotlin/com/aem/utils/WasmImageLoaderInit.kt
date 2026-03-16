@@ -1,9 +1,9 @@
-package com.aem
+package com.aem.utils
 
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.network.ktor3.KtorNetworkFetcherFactory
-import com.aem.network.createPlatformHttpClient
+import com.aem.network.createHttpClient
 
 /**
  * Initialize the Coil image loader with our platform HTTP client.
@@ -16,7 +16,7 @@ fun initImageLoader() {
     SingletonImageLoader.setSafe { context ->
         ImageLoader.Builder(context)
             .components {
-                add(KtorNetworkFetcherFactory(httpClient = createPlatformHttpClient()))
+                add(KtorNetworkFetcherFactory(httpClient = createHttpClient()))
             }
             .build()
     }
