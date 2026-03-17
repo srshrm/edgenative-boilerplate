@@ -2,6 +2,7 @@ package com.aem.utils
 
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
+import coil3.annotation.ExperimentalCoilApi
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import com.aem.network.createHttpClient
 
@@ -12,6 +13,7 @@ import com.aem.network.createHttpClient
  *
  * Must be called before any Compose rendering starts.
  */
+@OptIn(ExperimentalCoilApi::class)
 fun initImageLoader() {
     SingletonImageLoader.setSafe { context ->
         ImageLoader.Builder(context)
