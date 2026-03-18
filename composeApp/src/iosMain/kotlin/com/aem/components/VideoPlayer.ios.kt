@@ -10,7 +10,7 @@ import androidx.compose.ui.viewinterop.UIKitView
 import androidx.compose.ui.viewinterop.UIKitViewController
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.readValue
-import platform.AVFoundation.AVLayerVideoGravityResizeAspect
+import platform.AVFoundation.AVLayerVideoGravityResizeAspectFill
 import platform.AVFoundation.AVPlayer
 import platform.AVFoundation.AVPlayerItem
 import platform.AVFoundation.AVPlayerItemDidPlayToEndTimeNotification
@@ -25,6 +25,7 @@ import platform.CoreGraphics.CGRectZero
 import platform.CoreMedia.CMTimeMake
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSURL
+import platform.UIKit.UIColor
 import platform.UIKit.UIView
 
 @OptIn(ExperimentalForeignApi::class)
@@ -79,6 +80,8 @@ actual fun VideoPlayer(
                 AVPlayerViewController().apply {
                     this.player = player
                     this.showsPlaybackControls = true
+                    this.videoGravity = AVLayerVideoGravityResizeAspectFill
+                    this.view.backgroundColor = UIColor.clearColor
                 }
             },
             modifier = videoModifier,
@@ -102,7 +105,7 @@ actual fun VideoPlayer(
                     }
                 }
                 val playerLayer = AVPlayerLayer.playerLayerWithPlayer(player).apply {
-                    videoGravity = AVLayerVideoGravityResizeAspect
+                    videoGravity = AVLayerVideoGravityResizeAspectFill
                 }
                 container.layer.addSublayer(playerLayer)
 

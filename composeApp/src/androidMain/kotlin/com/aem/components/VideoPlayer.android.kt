@@ -1,5 +1,10 @@
 package com.aem.components
 
+import android.R.style.Theme_Black_NoTitleBar_Fullscreen
+import android.app.Dialog
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.activity.compose.LocalActivity
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.VideoSize
@@ -32,6 +40,7 @@ actual fun VideoPlayer(
     modifier: Modifier,
 ) {
     val context = AppContextProvider.applicationContext
+    val activity = LocalActivity.current
 
     var aspectRatio by remember { mutableFloatStateOf(16f / 9f) }
 
@@ -46,6 +55,9 @@ actual fun VideoPlayer(
         }
     }
 
+    // Track the fullscreen dialog so we can dismiss it on dispose
+    var fullscreenDialog: Dialog? = remember { null }
+
     DisposableEffect(url) {
         val listener = object : Player.Listener {
             override fun onVideoSizeChanged(videoSize: VideoSize) {
@@ -58,6 +70,7 @@ actual fun VideoPlayer(
 
         onDispose {
             exoPlayer.removeListener(listener)
+            fullscreenDialog?.dismiss()
             exoPlayer.release()
         }
     }
@@ -70,11 +83,74 @@ actual fun VideoPlayer(
 
     AndroidView(
         factory = { ctx ->
-            PlayerView(ctx).apply {
+            val inlinePlayerView = PlayerView(ctx).apply {
                 player = exoPlayer
                 useController = showControls
                 resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             }
+
+            if (showControls) {
+                inlinePlayerView.setFullscreenButtonClickListener { isFullscreen ->
+                    val act = activity ?: return@setFullscreenButtonClickListener
+
+                    if (isFullscreen) {
+                        // Create a second PlayerView for the dialog overlay
+                        val fullscreenPlayerView = PlayerView(act).apply {
+                            useController = true
+                            resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+                        }
+
+                        val dialog = Dialog(
+                            act,
+                            Theme_Black_NoTitleBar_Fullscreen
+                        ).apply {
+                            setContentView(
+                                FrameLayout(act).apply {
+                                    addView(
+                                        fullscreenPlayerView,
+                                        FrameLayout.LayoutParams(
+                                            ViewGroup.LayoutParams.MATCH_PARENT,
+                                            ViewGroup.LayoutParams.MATCH_PARENT
+                                        )
+                                    )
+                                }
+                            )
+                            setOnDismissListener {
+                                // Hand the player back to the inline view
+                                fullscreenPlayerView.player = null
+                                inlinePlayerView.player = exoPlayer
+                                fullscreenDialog = null
+                            }
+                            setCancelable(true)
+                        }
+
+                        // Wire up the exit-fullscreen button inside the dialog PlayerView
+                        fullscreenPlayerView.setFullscreenButtonClickListener {
+                            dialog.dismiss()
+                        }
+
+                        // Hand the player to the fullscreen view
+                        inlinePlayerView.player = null
+                        fullscreenPlayerView.player = exoPlayer
+
+                        // Hide system bars for immersive experience
+                        dialog.window?.let { w ->
+                            val controller =
+                                WindowCompat.getInsetsController(w, w.decorView)
+                            controller.hide(WindowInsetsCompat.Type.systemBars())
+                            controller.systemBarsBehavior =
+                                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                        }
+
+                        fullscreenDialog = dialog
+                        dialog.show()
+                    } else {
+                        fullscreenDialog?.dismiss()
+                    }
+                }
+            }
+
+            inlinePlayerView
         },
         update = { playerView ->
             playerView.useController = showControls
