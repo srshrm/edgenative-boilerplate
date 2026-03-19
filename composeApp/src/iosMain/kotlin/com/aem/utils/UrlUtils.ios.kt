@@ -5,7 +5,7 @@ import platform.UIKit.UIApplication
 
 actual fun openUrl(url: String) {
     val nsUrl = NSURL.URLWithString(url) ?: return
-    UIApplication.sharedApplication.openURL(nsUrl)
+    UIApplication.sharedApplication.openURL(nsUrl, emptyMap<Any?, Any>()) { _ -> }
 }
 
 actual val supportsPullToRefresh: Boolean = true
